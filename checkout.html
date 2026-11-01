@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout - Elok Mekar Sari</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/checkout.css">
+</head>
+<body>
+
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="home.html" class="nav-brand"><span class="brand-text">Elok Mekar Sari</span></a>
+      <div class="nav-actions">
+        <a href="cart.html" class="nav-cart" title="Keranjang">
+          <img src="Icon/keranjang.png" alt="Keranjang" class="nav-icon-img">
+          <span class="cart-badge" id="cart-badge">0</span>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page-header">
+    <div class="container">
+      <h1 class="page-title">Checkout</h1>
+      <p class="page-sub">Lengkapi informasi pengiriman Anda</p>
+    </div>
+  </div>
+
+  <!-- Checkout Steps -->
+  <div class="checkout-steps container">
+    <div class="step active" id="step-1-indicator">
+      <div class="step-circle">1</div>
+      <div class="step-label">Pengiriman</div>
+    </div>
+    <div class="step-line"></div>
+    <div class="step" id="step-2-indicator">
+      <div class="step-circle">2</div>
+      <div class="step-label">Pembayaran</div>
+    </div>
+    <div class="step-line"></div>
+    <div class="step" id="step-3-indicator">
+      <div class="step-circle">3</div>
+      <div class="step-label">Konfirmasi</div>
+    </div>
+  </div>
+
+  <div class="checkout-layout container">
+    <!-- Left: Forms -->
+    <div class="checkout-forms">
+
+      <!-- Step 1: Shipping -->
+      <div class="checkout-step" id="step-1">
+        <div class="step-card">
+          <h3 class="step-card-title">Metode Pengiriman</h3>
+          
+          <!-- Delivery Method -->
+          <div class="delivery-methods">
+            <label class="delivery-option" onclick="selectDelivery('delivery')">
+              <input type="radio" name="delivery-method" value="delivery" id="delivery-radio" checked>
+              <div class="delivery-card selected" id="delivery-card-delivery">
+                <div class="delivery-icon"><img src="Icon/truck.png" alt="Pengiriman" class="delivery-icon-img"></div>
+                <div class="delivery-info">
+                  <div class="delivery-name">Pengiriman ke Alamat</div>
+                  <div class="delivery-desc">Dikirim ke alamat Anda (ongkir dihitung berdasarkan jarak)</div>
+                </div>
+              </div>
+            </label>
+            <label class="delivery-option" onclick="selectDelivery('pickup')">
+              <input type="radio" name="delivery-method" value="pickup" id="pickup-radio">
+              <div class="delivery-card" id="delivery-card-pickup">
+                <div class="delivery-icon"><img src="Icon/store.png" alt="Pick Up" class="delivery-icon-img"></div>
+                <div class="delivery-info">
+                  <div class="delivery-name">Pick Up di Tempat</div>
+                  <div class="delivery-desc">Ambil langsung di lokasi kami</div>
+                </div>
+              </div>
+            </label>
+          </div>
+
+          <!-- Pickup Info -->
+          <div class="pickup-info hidden" id="pickup-info">
+            <div class="pickup-detail-card">
+              <h4>Informasi Pick Up</h4>
+              <p><strong>Lokasi:</strong> RW 08, Kelurahan Semolowaru, Kecamatan Sukolilo, Kota Surabaya</p>
+              <p><strong>Jam Operasional:</strong> Senin-Sabtu, 08.00 - 17.00 WIB</p>
+              <p><strong>Kontak:</strong> +62 812-3166-6161</p>
+              <div class="pickup-date-section">
+                <label>Pilih Tanggal & Waktu Pick Up:</label>
+                <input type="date" id="pickup-date" min="" class="pickup-date-input">
+                <select id="pickup-time" class="pickup-time-select">
+                  <option value="">-- Pilih Waktu --</option>
+                  <option value="08:00">08:00</option>
+                  <option value="09:00">09:00</option>
+                  <option value="10:00">10:00</option>
+                  <option value="11:00">11:00</option>
+                  <option value="13:00">13:00 (Setelah istirahat)</option>
+                  <option value="14:00">14:00</option>
+                  <option value="15:00">15:00</option>
+                  <option value="16:00">16:00</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Delivery Address -->
+          <div class="address-form" id="address-form">
+            <h4>Alamat Pengiriman</h4>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Nama Penerima</label>
+                <input type="text" id="recipient-name" placeholder="Nama lengkap penerima">
+              </div>
+              <div class="form-group">
+                <label>Nomor HP</label>
+                <input type="tel" id="recipient-phone" placeholder="08xxxxxxxxxx">
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Alamat Lengkap</label>
+              <textarea id="address" placeholder="Jalan, RT/RW, Kelurahan, Kecamatan..." rows="3"></textarea>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Kota</label>
+                <input type="text" id="city" placeholder="Kota">
+              </div>
+              <div class="form-group">
+                <label>Kode Pos</label>
+                <input type="text" id="zip" placeholder="Kode Pos">
+              </div>
+            </div>
+          </div>
+
+          <div class="step-actions">
+            <a href="cart.html" class="btn-back">Kembali</a>
+            <button type="button" class="btn-next" onclick="goToStep2()">Lanjut ke Pembayaran</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2: Payment -->
+      <div class="checkout-step hidden" id="step-2">
+        <div class="step-card">
+          <h3 class="step-card-title">Metode Pembayaran</h3>
+          
+          <div class="payment-methods">
+            <label class="payment-option" onclick="selectPayment('transfer')">
+              <input type="radio" name="payment-method" value="transfer" id="transfer-radio" checked>
+              <div class="payment-card selected" id="payment-card-transfer">
+                <div class="payment-icon">🏦</div>
+                <div class="payment-info">
+                  <div class="payment-name">Transfer Bank</div>
+                  <div class="payment-desc">BRI, BCA, Mandiri, BNI</div>
+                </div>
+              </div>
+            </label>
+            <label class="payment-option" onclick="selectPayment('ewallet')">
+              <input type="radio" name="payment-method" value="ewallet" id="ewallet-radio">
+              <div class="payment-card" id="payment-card-ewallet">
+                <div class="payment-icon"><img src="Icon/hp.png" alt="E-Wallet" class="payment-icon-img"></div>
+                <div class="payment-info">
+                  <div class="payment-name">E-Wallet</div>
+                  <div class="payment-desc">GoPay, OVO, Dana, ShopeePay</div>
+                </div>
+              </div>
+            </label>
+          </div>
+
+          <!-- Bank Transfer Details -->
+          <div class="bank-details" id="bank-details">
+            <h4>Nomor Rekening Bank:</h4>
+            <div class="bank-account-card">
+              <div class="bank-account-info">
+                <div class="bank-name" id="selected-bank">BNI</div>
+                <div class="account-number" id="account-number">0987-6543-21</div>
+                <div class="account-name">a.n. Kelompok Tani Elok Mekar Sari</div>
+              </div>
+              <button type="button" class="copy-btn" onclick="copyAccount()">Salin</button>
+            </div>
+          </div>
+
+          <!-- E-Wallet Details -->
+          <div class="ewallet-details hidden" id="ewallet-details">
+            <h4>Nomor E-Wallet:</h4>
+            <div class="ewallet-account-card">
+              <div class="ewallet-name" id="selected-ewallet">GoPay / OVO / Dana / ShopeePay</div>
+              <div class="ewallet-number">+62 812-3166-6161</div>
+              <div class="ewallet-holder">a.n. Elok Mekar Sari</div>
+            </div>
+          </div>
+
+          <div class="step-actions">
+            <button type="button" class="btn-back" onclick="goToStep1()">Kembali</button>
+            <button type="button" class="btn-next" onclick="goToStep3()">Konfirmasi Pesanan</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3: Confirmation -->
+      <div class="checkout-step hidden" id="step-3">
+        <div class="step-card">
+          <h3 class="step-card-title">Konfirmasi Pesanan</h3>
+          
+          <div class="confirmation-section">
+            <h4>Detail Produk</h4>
+            <div id="confirm-items"></div>
+          </div>
+
+          <div class="confirmation-section">
+            <h4>Informasi Pengiriman/Pengambilan</h4>
+            <div id="confirm-shipping"></div>
+          </div>
+
+          <div class="confirmation-section">
+            <h4>Metode Pembayaran</h4>
+            <div id="confirm-payment"></div>
+          </div>
+
+          <!-- Upload Bukti Bayar -->
+          <div class="payment-proof-section" id="payment-proof-section">
+            <h4>Upload Bukti Pembayaran</h4>
+            <p class="proof-note">Setelah melakukan transfer, upload bukti pembayaran di bawah ini</p>
+            <div class="upload-area" id="upload-area" onclick="document.getElementById('proof-file').click()" ondrop="handleDrop(event)" ondragover="event.preventDefault()">
+              <input type="file" id="proof-file" accept="image/*" onchange="previewProof(event)" style="display:none">
+              <div id="upload-placeholder">
+                <div class="upload-icon"><img src="Icon/camera.png" alt="Upload Bukti" class="upload-icon-img"></div>
+                <p>Klik atau drag foto bukti transfer</p>
+                <span>Format: JPG, PNG, JPEG</span>
+              </div>
+              <img id="proof-preview" class="hidden" alt="Bukti Pembayaran">
+            </div>
+          </div>
+
+          <div class="confirm-total">
+            <div class="confirm-total-label">Total Pembayaran:</div>
+            <div class="confirm-total-value" id="confirm-total">Rp 0</div>
+          </div>
+
+          <div class="step-actions">
+            <button type="button" class="btn-back" onclick="goToStep2()">Kembali</button>
+            <button type="button" class="btn-confirm" onclick="placeOrder()">
+              Buat Pesanan
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Right: Order Summary -->
+    <div class="checkout-summary">
+      <div class="summary-card">
+        <h3>Ringkasan</h3>
+        <div id="checkout-items-summary"></div>
+        <div class="summary-divider"></div>
+        <div class="summary-row">
+          <span>Subtotal</span>
+          <span id="checkout-subtotal">Rp 0</span>
+        </div>
+        <div class="summary-row" id="shipping-row">
+          <span>Ongkos Kirim</span>
+          <span id="checkout-shipping">-</span>
+        </div>
+        <div class="summary-divider"></div>
+        <div class="summary-row total-row">
+          <span>Total</span>
+          <span id="checkout-total">Rp 0</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <script src="js/app.js"></script>
+  <script src="js/checkout.js"></script>
+</body>
+</html>

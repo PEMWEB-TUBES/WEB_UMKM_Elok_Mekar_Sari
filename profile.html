@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profil - Elok Mekar Sari</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/profile.css">
+</head>
+<body>
+
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="home.html" class="nav-brand"><span class="brand-text">Elok Mekar Sari</span></a>
+      <div class="nav-links">
+        <a href="home.html" class="nav-link">Beranda</a>
+        <a href="marketplace.html" class="nav-link">Produk</a>
+        <a href="orders.html" class="nav-link">Pesanan</a>
+        <a href="profile.html" class="nav-link active">Profil</a>
+      </div>
+      <div class="nav-actions">
+        <a href="cart.html" class="nav-cart" title="Keranjang">
+          <img src="Icon/keranjang.png" alt="Keranjang" class="nav-icon-img">
+          <span class="cart-badge" id="cart-badge">0</span>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="profile-layout container">
+    <!-- Sidebar -->
+    <aside class="profile-sidebar">
+      <div class="profile-card">
+        <div class="profile-avatar-large" id="profile-avatar-display">U</div>
+        <h3 class="profile-name-display" id="profile-name-display">Nama Pengguna</h3>
+        <p class="profile-email-display" id="profile-email-display">email@contoh.com</p>
+        <div class="profile-badge">Pelanggan</div>
+      </div>
+      <nav class="profile-nav">
+        <button class="profile-nav-item active" onclick="showSection('info', this)">Informasi Pribadi</button>
+        <button class="profile-nav-item" onclick="showSection('address', this)">Alamat</button>
+        <button class="profile-nav-item" onclick="showSection('security', this)">Keamanan</button>
+        <button class="profile-nav-item" onclick="showSection('orders', this)">Riwayat Pesanan</button>
+        <div class="profile-nav-divider"></div>
+        <button class="profile-nav-item logout-nav" onclick="logout()">Keluar</button>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="profile-main">
+      <!-- Info Section -->
+      <div class="profile-section active" id="section-info">
+        <div class="section-header-card">
+          <h2>Informasi Pribadi</h2>
+        </div>
+        <form class="profile-form" onsubmit="saveProfile(event)">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Nama Lengkap</label>
+              <input type="text" id="pf-name" placeholder="Nama lengkap">
+            </div>
+            <div class="form-group">
+              <label>Nomor HP</label>
+              <input type="tel" id="pf-phone" placeholder="08xxxxxxxxxx">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="pf-email" placeholder="email@contoh.com" readonly class="readonly-input">
+          </div>
+          <div class="form-group">
+            <label>Jenis Kelamin</label>
+            <select id="pf-gender" class="form-select">
+              <option value="">-- Pilih --</option>
+              <option value="laki">Laki-laki</option>
+              <option value="perempuan">Perempuan</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Tanggal Lahir</label>
+            <input type="date" id="pf-dob">
+          </div>
+          <button type="submit" class="btn-save">Simpan Perubahan</button>
+        </form>
+      </div>
+
+      <!-- Address Section -->
+      <div class="profile-section hidden" id="section-address">
+        <div class="section-header-card">
+          <h2>Alamat Saya</h2>
+          <button class="btn-add-address" onclick="toggleAddAddress()">+ Tambah Alamat</button>
+        </div>
+
+        <!-- Add Address Form -->
+        <div class="add-address-form hidden" id="add-address-form">
+          <h4>Tambah Alamat Baru</h4>
+          <div class="form-group">
+            <label>Label Alamat</label>
+            <input type="text" id="addr-label" placeholder="Rumah, Kantor, dll">
+          </div>
+          <div class="form-group">
+            <label>Alamat Lengkap</label>
+            <textarea id="addr-detail" rows="3" placeholder="Jalan, RT/RW, Kelurahan..."></textarea>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Kota</label>
+              <input type="text" id="addr-city" placeholder="Kota">
+            </div>
+            <div class="form-group">
+              <label>Kode Pos</label>
+              <input type="text" id="addr-zip" placeholder="60xxx">
+            </div>
+          </div>
+          <div class="form-actions">
+            <button class="btn-cancel-sm" onclick="toggleAddAddress()">Batal</button>
+            <button class="btn-save" onclick="saveAddress()">Simpan Alamat</button>
+          </div>
+        </div>
+
+        <!-- Address List -->
+        <div id="address-list"></div>
+        <div class="empty-address hidden" id="empty-address">
+          <p>Belum ada alamat tersimpan</p>
+        </div>
+      </div>
+
+      <!-- Security Section -->
+      <div class="profile-section hidden" id="section-security">
+        <div class="section-header-card">
+          <h2>Keamanan Akun</h2>
+        </div>
+        <form class="profile-form" onsubmit="changePassword(event)">
+          <div class="form-group">
+            <label>Password Lama</label>
+            <div class="input-wrapper">
+              <input type="password" id="old-password" placeholder="Masukkan password lama">
+              <button type="button" class="password-toggle" onclick="togglePassword('old-password', this)" title="Lihat password">
+                <img src="Icon/invisible.png" alt="Toggle Password" class="password-toggle-img">
+              </button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Password Baru</label>
+            <div class="input-wrapper">
+              <input type="password" id="new-password" placeholder="Minimal 8 karakter" minlength="8">
+              <button type="button" class="password-toggle" onclick="togglePassword('new-password', this)" title="Lihat password">
+                <img src="Icon/invisible.png" alt="Toggle Password" class="password-toggle-img">
+              </button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Konfirmasi Password Baru</label>
+            <div class="input-wrapper">
+              <input type="password" id="confirm-password" placeholder="Ulangi password baru">
+              <button type="button" class="password-toggle" onclick="togglePassword('confirm-password', this)" title="Lihat password">
+                <img src="Icon/invisible.png" alt="Toggle Password" class="password-toggle-img">
+              </button>
+            </div>
+          </div>
+          <button type="submit" class="btn-save"><img src="Icon/password.png" alt="" class="btn-icon-img" style="filter: brightness(0) invert(1);"> Ubah Password</button>
+        </form>
+      </div>
+
+      <!-- Orders History Section -->
+      <div class="profile-section hidden" id="section-orders">
+        <div class="section-header-card">
+          <h2>Riwayat Pesanan</h2>
+          <a href="orders.html" class="see-all-link">Lihat Semua →</a>
+        </div>
+        <div id="recent-orders-list">
+          <!-- Filled by JS -->
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <script src="js/app.js"></script>
+  <script src="js/profile.js"></script>
+</body>
+</html>

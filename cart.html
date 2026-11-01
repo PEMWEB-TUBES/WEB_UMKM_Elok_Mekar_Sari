@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Keranjang Belanja - Elok Mekar Sari</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/cart.css">
+</head>
+<body>
+
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="home.html" class="nav-brand"><span class="brand-text">Elok Mekar Sari</span></a>
+      <div class="nav-links">
+        <a href="home.html" class="nav-link">Beranda</a>
+        <a href="marketplace.html" class="nav-link">Produk</a>
+        <a href="orders.html" class="nav-link">Pesanan</a>
+        <a href="profile.html" class="nav-link">Profil</a>
+      </div>
+      <div class="nav-actions">
+        <a href="cart.html" class="nav-cart active-nav" title="Keranjang">
+          <img src="Icon/keranjang.png" alt="Keranjang" class="nav-icon-img">
+          <span class="cart-badge" id="cart-badge">0</span>
+        </a>
+        <div class="nav-user" onclick="toggleUserMenu()">
+          <div class="nav-avatar" id="nav-avatar">U</div>
+          <div class="user-dropdown" id="user-dropdown">
+            <div class="dropdown-header">
+              <div class="dropdown-avatar" id="dropdown-avatar">U</div>
+              <div>
+                <div class="dropdown-name" id="dropdown-name">Pengguna</div>
+                <div class="dropdown-email" id="dropdown-email">user@email.com</div>
+              </div>
+            </div>
+            <div class="dropdown-divider"></div>
+            <a href="profile.html" class="dropdown-item"><img src="Icon/person.png" alt="" class="dropdown-icon-img"> Profil Saya</a>
+            <a href="orders.html" class="dropdown-item">📦 Pesanan Saya</a>
+            <div class="dropdown-divider"></div>
+            <button class="dropdown-item logout-btn" onclick="logout()">Keluar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page-header">
+    <div class="container">
+      <h1 class="page-title"><img src="Icon/keranjang.png" alt="" class="title-icon-img" style="filter: brightness(0) invert(1);"> Keranjang Belanja</h1>
+      <p class="page-sub">Periksa pesanan Anda sebelum checkout</p>
+    </div>
+  </div>
+
+  <div class="cart-layout container">
+    <!-- Cart Items -->
+    <div class="cart-items-section">
+      <div class="cart-items-header">
+        <h3>Produk (<span id="cart-count">0</span>)</h3>
+        <button class="clear-cart-btn" onclick="clearCart()">Hapus Semua</button>
+      </div>
+      <div id="cart-items">
+        <!-- Filled by JS -->
+      </div>
+      <div class="empty-cart hidden" id="empty-cart">
+        <div class="empty-icon"><img src="Icon/keranjang.png" alt="Keranjang Kosong" class="empty-icon-img"></div>
+        <h3>Keranjang Kosong</h3>
+        <p>Belum ada produk di keranjang Anda</p>
+        <a href="marketplace.html" class="btn-primary">Mulai Belanja</a>
+      </div>
+    </div>
+
+    <!-- Order Summary -->
+    <div class="order-summary" id="order-summary">
+      <div class="summary-header">
+        <h3>Ringkasan Pesanan</h3>
+      </div>
+      <div class="summary-body">
+        <div class="summary-row">
+          <span>Subtotal</span>
+          <span id="subtotal">Rp 0</span>
+        </div>
+        <div class="summary-row">
+          <span>Ongkos Kirim</span>
+          <span id="shipping-cost">Dihitung saat checkout</span>
+        </div>
+        <div class="summary-divider"></div>
+        <div class="summary-row total-row">
+          <span>Total</span>
+          <span id="total-price">Rp 0</span>
+        </div>
+      </div>
+      <button class="btn-checkout" onclick="window.location='checkout.html'" id="checkout-btn">
+        Checkout Sekarang
+      </button>
+      <a href="marketplace.html" class="continue-shopping">Lanjut Belanja</a>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <script src="js/app.js"></script>
+  <script src="js/cart.js"></script>
+</body>
+</html>

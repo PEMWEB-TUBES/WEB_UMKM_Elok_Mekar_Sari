@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Beranda - Elok Mekar Sari</title>
+  <meta name="description" content="Beranda Marketplace UMKM Elok Mekar Sari - Produk segar berkualitas dari Surabaya">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/home.css">
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="home.html" class="nav-brand">
+        <span class="brand-text">Elok Mekar Sari</span>
+      </a>
+      <div class="nav-links">
+        <a href="home.html" class="nav-link active">Beranda</a>
+        <a href="marketplace.html" class="nav-link">Produk</a>
+        <a href="orders.html" class="nav-link">Pesanan</a>
+        <a href="profile.html" class="nav-link">Profil</a>
+      </div>
+      <div class="nav-actions">
+        <button class="nav-search-btn" onclick="window.location='marketplace.html'" title="Cari Produk">
+          <img src="Icon/search.png" alt="Cari" class="nav-icon-img">
+        </button>
+        <a href="cart.html" class="nav-cart" title="Keranjang">
+          <img src="Icon/keranjang.png" alt="Keranjang" class="nav-icon-img">
+          <span class="cart-badge" id="cart-badge">0</span>
+        </a>
+        <div class="nav-user" onclick="toggleUserMenu()">
+          <div class="nav-avatar" id="nav-avatar">U</div>
+          <div class="user-dropdown" id="user-dropdown">
+            <div class="dropdown-header">
+              <div class="dropdown-avatar" id="dropdown-avatar">U</div>
+              <div>
+                <div class="dropdown-name" id="dropdown-name">Pengguna</div>
+                <div class="dropdown-email" id="dropdown-email">user@email.com</div>
+              </div>
+            </div>
+            <div class="dropdown-divider"></div>
+            <a href="profile.html" class="dropdown-item"><img src="Icon/person.png" alt="" class="dropdown-icon-img"> Profil Saya</a>
+            <a href="orders.html" class="dropdown-item">📦 Pesanan Saya</a>
+            <div class="dropdown-divider"></div>
+            <button class="dropdown-item logout-btn" onclick="logout()">Keluar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-slider" id="hero-slider">
+      <div class="hero-slide active" style="background-image: linear-gradient(135deg, rgba(34,85,34,0.85) 0%, rgba(76,153,0,0.75) 100%), url('images/Kelompok_Tani_Elok_Mekar_Sari.jpg')">
+        <div class="hero-content">
+          <h1 class="hero-title">Produk Segar dari <br><span class="hero-highlight">Kelompok Tani</span></h1>
+          <p class="hero-desc">Temukan olahan jamur, lele, dan minuman tradisional berkualitas tinggi langsung dari petani Surabaya</p>
+          <div class="hero-actions">
+            <a href="marketplace.html" class="btn-primary">Belanja Sekarang <img src="Icon/keranjang.png" alt="" class="btn-icon-img-inline"></a>
+            <a href="home.html#about" class="btn-outline">Tentang Kami</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-dots" id="hero-dots"></div>
+    <button class="hero-prev" onclick="prevSlide()">❮</button>
+    <button class="hero-next" onclick="nextSlide()">❯</button>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="stats-section">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat-card" data-target="150">
+          <div class="stat-number" id="stat-0">0</div>
+          <div class="stat-label">Produk Terjual</div>
+        </div>
+        <div class="stat-card" data-target="80">
+          <div class="stat-number" id="stat-1">0</div>
+          <div class="stat-label">Pelanggan Puas</div>
+        </div>
+        <div class="stat-card" data-target="10">
+          <div class="stat-number" id="stat-2">0</div>
+          <div class="stat-label">Jenis Produk</div>
+        </div>
+        <div class="stat-card" data-target="3">
+          <div class="stat-number" id="stat-3">0</div>
+          <div class="stat-label">Tahun Berdiri</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Category Section -->
+  <section class="section categories-section">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Kategori Produk</h2>
+      </div>
+      <div class="categories-grid">
+        <a href="marketplace.html?cat=jamur" class="category-card cat-green">
+          <div class="cat-icon"><img src="Icon/mushroom.png" alt="Olahan Jamur" class="cat-img"></div>
+          <div class="cat-name">Olahan Jamur</div>
+          <div class="cat-count">5 Produk</div>
+        </a>
+        <a href="marketplace.html?cat=lele" class="category-card cat-blue">
+          <div class="cat-icon"><img src="Icon/fish.png" alt="Olahan Lele" class="cat-img"></div>
+          <div class="cat-name">Olahan Lele</div>
+          <div class="cat-count">2 Produk</div>
+        </a>
+        <a href="marketplace.html?cat=minuman" class="category-card cat-yellow">
+          <div class="cat-icon"><img src="Icon/drink.png" alt="Minuman" class="cat-img"></div>
+          <div class="cat-name">Minuman</div>
+          <div class="cat-count">1 Produk</div>
+        </a>
+        <a href="marketplace.html?cat=lainnya" class="category-card cat-orange">
+          <div class="cat-icon"><img src="Icon/gandum.png" alt="Lainnya" class="cat-img"></div>
+          <div class="cat-name">Lainnya</div>
+          <div class="cat-count">2 Produk</div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Products -->
+  <section class="section featured-section">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Produk Unggulan</h2>
+        <a href="marketplace.html" class="see-all-link">Lihat Semua</a>
+      </div>
+      <div class="products-grid" id="featured-products">
+        <div class="product-card" style="cursor:pointer;" onclick="window.location.href='marketplace.html?id=4'" title="Lihat Sempol Jamur di Marketplace">
+          <div class="product-card-img-wrapper">
+            <img src="images/Sempol_Jamur.jpeg" alt="Sempol Jamur" class="product-card-img" loading="lazy">
+            <span class="product-card-badge">Olahan Jamur</span>
+          </div>
+          <div class="product-card-body">
+            <div class="product-card-cat">Olahan Jamur</div>
+            <h3 class="product-card-name">Sempol Jamur</h3>
+            <div class="product-card-price" style="margin-bottom:0;">Rp 10.000</div>
+          </div>
+        </div>
+
+        <div class="product-card" style="cursor:pointer;" onclick="window.location.href='marketplace.html?id=9'" title="Lihat Tahu Walik di Marketplace">
+          <div class="product-card-img-wrapper">
+            <img src="images/tahu_walik.jpeg" alt="Tahu Walik" class="product-card-img" loading="lazy">
+            <span class="product-card-badge">Lainnya</span>
+          </div>
+          <div class="product-card-body">
+            <div class="product-card-cat">Lainnya</div>
+            <h3 class="product-card-name">Tahu Walik</h3>
+            <div class="product-card-price" style="margin-bottom:0;">Rp 12.000</div>
+          </div>
+        </div>
+
+        <div class="product-card" style="cursor:pointer;" onclick="window.location.href='marketplace.html?id=3'" title="Lihat Sate Jamur di Marketplace">
+          <div class="product-card-img-wrapper">
+            <img src="images/Sate_Jamur.jpeg" alt="Sate Jamur" class="product-card-img" loading="lazy">
+            <span class="product-card-badge">Olahan Jamur</span>
+          </div>
+          <div class="product-card-body">
+            <div class="product-card-cat">Olahan Jamur</div>
+            <h3 class="product-card-name">Sate Jamur</h3>
+            <div class="product-card-price" style="margin-bottom:0;">Rp 15.000</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section class="section about-section" id="about">
+    <div class="container">
+      <div class="about-grid">
+        <div class="about-images">
+          <div class="about-img-main">
+            <img src="images/Kelompok_Tani_Elok_Mekar_Sari.jpg" alt="Kelompok Tani Elok Mekar Sari" loading="lazy">
+          </div>
+          <div class="about-img-sub">
+            <img src="images/Budidaya_Jamur.jpg" alt="Budidaya Jamur" loading="lazy">
+          </div>
+        </div>
+        <div class="about-content">
+          <div class="about-badge">Tentang Kami</div>
+          <h2 class="about-title">Kelompok Tani <span class="text-green">Elok Mekar Sari</span></h2>
+          <p class="about-desc">Kelompok Tani Elok Mekar Sari adalah UMKM yang bergerak di bidang budidaya dan pengolahan hasil tani, khususnya jamur dan ikan lele, yang berlokasi di Surabaya.</p>
+          <p class="about-desc">Kami berkomitmen untuk menghasilkan produk berkualitas tinggi yang menyehatkan, dengan proses produksi higienis dan bahan-bahan alami pilihan.</p>
+          <div class="about-points">
+            <div class="about-point">✅ Produk segar dan higienis</div>
+            <div class="about-point">✅ Proses produksi alami tanpa pengawet</div>
+            <div class="about-point">✅ Didukung PKM BIMA & Pemkot Surabaya</div>
+            <div class="about-point">✅ Pengiriman & pick up tersedia</div>
+          </div>
+          <a href="marketplace.html" class="btn-primary">Belanja Sekarang</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="footer-logo">Elok Mekar Sari</div>
+          <p class="footer-desc">Marketplace UMKM Kelompok Tani Elok Mekar Sari. Produk segar berkualitas langsung dari petani Surabaya.</p>
+        </div>
+        <div class="footer-links">
+          <h4>Navigasi</h4>
+          <a href="home.html">Beranda</a>
+          <a href="marketplace.html">Produk</a>
+          <a href="orders.html">Pesanan</a>
+          <a href="profile.html">Profil</a>
+        </div>
+        <div class="footer-links">
+          <h4>Kategori</h4>
+          <a href="marketplace.html?cat=jamur">Olahan Jamur</a>
+          <a href="marketplace.html?cat=lele">Olahan Lele</a>
+          <a href="marketplace.html?cat=minuman">Minuman</a>
+          <a href="marketplace.html?cat=lainnya">Lainnya</a>
+        </div>
+        <div class="footer-contact">
+          <h4>Kontak</h4>
+          <p>RW 08, Kelurahan Semolowaru, Kecamatan Sukolilo, Kota Surabaya</p>
+          <p>+62 812-3166-6161</p>
+          <p>kelompoktanielokmekarsari@gmail.com</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2024 Elok Mekar Sari. Semua hak dilindungi.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/app.js"></script>
+  <script src="js/home.js"></script>
+</body>
+</html>

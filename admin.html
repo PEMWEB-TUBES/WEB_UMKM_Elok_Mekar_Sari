@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - Elok Mekar Sari</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body class="admin-body">
+
+  <!-- Admin Sidebar -->
+  <aside class="admin-sidebar" id="admin-sidebar">
+    <div class="sidebar-brand">
+      <div class="sidebar-brand-text">
+        <span class="brand-title-admin">ELOK MEKAR SARI</span>
+        <span class="brand-role-badge">Admin Panel</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <button type="button" class="sidebar-item active" data-section="dashboard" onclick="showAdminSection('dashboard', this)">
+        <svg class="nav-svg-icon" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+          <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+        </svg>
+        <span>Dashboard Admin</span>
+      </button>
+
+      <button type="button" class="sidebar-item" data-section="products" onclick="showAdminSection('products', this)">
+        <svg class="nav-svg-icon" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+          <path d="M20 2H4c-1 0-2 .9-2 2v3.01c0 .72.43 1.34 1 1.69V20c0 1.1 1.1 2 2 2h14c.9 0 2-.9 2-2V8.7c.57-.35 1-.97 1-1.69V4c0-1.1-1-2-2-2zm-1 18H5V9h14v11zm1-13H4V4h16v3z"/>
+        </svg>
+        <span>Manajemen Produk</span>
+      </button>
+
+      <button type="button" class="sidebar-item" data-section="orders" onclick="showAdminSection('orders', this)">
+        <svg class="nav-svg-icon" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+          <path d="M19 6h-2c0-2.76-2.24-5-5-5S7 3.24 7 6H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-7-3c1.66 0 3 1.34 3 3H9c0-1.66 1.34-3 3-3zm7 17H5V8h14v12zm-7-8c-1.66 0-3-1.34-3-3H7c0 2.76 2.24 5 5 5s5-2.24 5-5h-2c0 1.66-1.34 3-3 3z"/>
+        </svg>
+        <span>Manajemen Order</span>
+      </button>
+
+
+
+      <button type="button" class="sidebar-item" data-section="users" onclick="showAdminSection('users', this)">
+        <svg class="nav-svg-icon" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+          <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+        </svg>
+        <span>Pengguna</span>
+      </button>
+
+      <button type="button" class="sidebar-item" data-section="reports" onclick="showAdminSection('reports', this)">
+        <svg class="nav-svg-icon" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+          <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+        </svg>
+        <span>Laporan & Statistik</span>
+      </button>
+
+      <div class="sidebar-divider"></div>
+
+      <!-- Tombol Keluar: teks warna merah tanpa icon -->
+      <button type="button" class="sidebar-item logout-item" onclick="openLogoutModal()">
+        <span>Keluar Admin</span>
+      </button>
+    </nav>
+  </aside>
+
+  <!-- Admin Main Content -->
+  <div class="admin-main" id="admin-main">
+    
+    <!-- Topbar Header -->
+    <header class="admin-topbar">
+      <button class="sidebar-toggle" onclick="toggleSidebar()" title="Toggle Sidebar">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+      </button>
+      
+      <div class="topbar-title-section">
+        <h1 class="topbar-title" id="topbar-title">Dashboard Admin</h1>
+        <span class="topbar-sub">Sistem Kelola UMKM Elok Mekar Sari</span>
+      </div>
+
+      <div class="topbar-right">
+        <div class="admin-profile-pill">
+          <div class="admin-pill-avatar-badge">A</div>
+          <div class="admin-pill-info">
+            <span class="admin-pill-name">Admin Utama</span>
+            <span class="admin-pill-email">admin123</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- CONTENT SECTIONS -->
+
+    <!-- 1. DASHBOARD OVERVIEW SECTION -->
+    <section class="admin-section active" id="sec-dashboard">
+      <div class="section-banner">
+        <div>
+          <h2>Selamat Datang di Panel Pengelola</h2>
+          <p>Pantau performa penjualan, ketersediaan produk, dan status pesanan pelanggan secara langsung.</p>
+        </div>
+      </div>
+
+      <!-- 4 Summary Cards (from Flutter DashboardTab) -->
+      <div class="admin-stats-grid">
+        <!-- 1. Total Order Hari Ini (Clickable to Orders) -->
+        <div class="admin-stat-card card-green card-interactive" onclick="showAdminSection('orders', document.querySelector('[data-section=orders]'))" title="Klik untuk lihat Manajemen Order">
+          <div class="stat-icon-wrapper">
+            <img src="Icon/keranjang.png" alt="Keranjang" class="stat-icon-img">
+          </div>
+          <div class="stat-data">
+            <span class="stat-label">Total Order Hari Ini</span>
+            <span class="stat-value" id="dash-orders-today">0</span>
+            <span class="stat-note">Klik untuk kelola order →</span>
+          </div>
+        </div>
+
+        <!-- 2. Total Pendapatan (Clickable to Orders) -->
+        <div class="admin-stat-card card-blue card-interactive" onclick="showAdminSection('orders', document.querySelector('[data-section=orders]'))" title="Klik untuk lihat Manajemen Order">
+          <div class="stat-icon-wrapper">
+            <img src="Icon/dollar.png" alt="Dollar" class="stat-icon-img">
+          </div>
+          <div class="stat-data">
+            <span class="stat-label">Total Pendapatan</span>
+            <span class="stat-value" id="dash-total-revenue">Rp 0</span>
+            <span class="stat-note">Akumulasi pesanan aktif</span>
+          </div>
+        </div>
+
+        <!-- 3. Pesanan Perlu Ditangani -->
+        <div class="admin-stat-card card-orange card-interactive" onclick="showAdminSection('orders', document.querySelector('[data-section=orders]'))" title="Klik untuk lihat Manajemen Order">
+          <div class="stat-icon-wrapper">
+            <img src="Icon/kalender.png" alt="Kalender" class="stat-icon-img">
+          </div>
+          <div class="stat-data">
+            <span class="stat-label">Perlu Ditangani</span>
+            <span class="stat-value" id="dash-pending-orders">0</span>
+            <span class="stat-note">Pesanan pending/diproses →</span>
+          </div>
+        </div>
+
+        <!-- 4. Produk Terlaris -->
+        <div class="admin-stat-card card-teal">
+          <div class="stat-icon-wrapper">
+            <img src="Icon/bintang.png" alt="Bintang" class="stat-icon-img">
+          </div>
+          <div class="stat-data">
+            <span class="stat-label">Produk Terlaris</span>
+            <span class="stat-value" id="dash-top-product">-</span>
+            <span class="stat-note" id="dash-top-product-qty">0 porsi terjual</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Tables Section: Recent Orders & Low Stock -->
+      <div class="dashboard-double-grid">
+        <div class="admin-card">
+          <div class="card-header-flex">
+            <h3>Order Terbaru</h3>
+            <button class="btn-text-action" onclick="showAdminSection('orders', document.querySelector('[data-section=orders]'))">Lihat Semua →</button>
+          </div>
+          <div class="table-responsive">
+            <table class="table-modern">
+              <thead>
+                <tr>
+                  <th>No. Order</th>
+                  <th>Pelanggan</th>
+                  <th>Total</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="dash-recent-orders-tbody">
+                <!-- Filled by JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="admin-card">
+          <div class="card-header-flex">
+            <h3>Stok Produk Menipis</h3>
+            <button class="btn-text-action" onclick="showAdminSection('products', document.querySelector('[data-section=products]'))">Kelola Produk →</button>
+          </div>
+          <div class="table-responsive">
+            <table class="table-modern">
+              <thead>
+                <tr>
+                  <th>Produk</th>
+                  <th>Kategori</th>
+                  <th>Stok</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="dash-low-stock-tbody">
+                <!-- Filled by JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- 2. PRODUCT MANAGEMENT SECTION -->
+    <section class="admin-section hidden" id="sec-products">
+      <div class="section-toolbar">
+        <div>
+          <h2>Manajemen Produk</h2>
+          <p>Tambah, edit, dan atur ketersediaan produk UMKM.</p>
+        </div>
+        <button type="button" class="btn-primary-action" onclick="openAddProductModal()">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+          <span>Tambah Produk Baru</span>
+        </button>
+      </div>
+
+      <div class="admin-card">
+        <div class="table-filters-row">
+          <div class="search-box-admin">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+            <input type="text" id="filter-prod-search" placeholder="Cari nama produk..." oninput="renderAdminProductsTable()">
+          </div>
+
+          <div class="filter-select-wrapper">
+            <select id="filter-prod-category" onchange="renderAdminProductsTable()">
+              <option value="all">Semua Kategori</option>
+              <option value="jamur">Olahan Jamur</option>
+              <option value="lele">Olahan Lele</option>
+              <option value="minuman">Minuman</option>
+              <option value="snack">Snack</option>
+              <option value="makanan">Makanan</option>
+              <option value="lainnya">Lainnya</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table-modern">
+            <thead>
+              <tr>
+                <th>Gambar</th>
+                <th>Nama Produk</th>
+                <th>Kategori</th>
+                <th>Harga</th>
+                <th>Stok</th>
+                <th>Terjual</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="admin-products-table-tbody">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. ORDER MANAGEMENT SECTION -->
+    <section class="admin-section hidden" id="sec-orders">
+      <div class="section-toolbar">
+        <div>
+          <h2>Manajemen Order</h2>
+          <p>Verifikasi bukti pembayaran dan perbarui status pesanan pelanggan.</p>
+        </div>
+      </div>
+
+      <!-- Status Tabs (from Flutter OrderManagementTab) -->
+      <div class="order-tabs-admin">
+        <button type="button" class="tab-btn active" data-status="all" onclick="filterOrdersByStatus('all', this)">Semua Pesanan</button>
+        <button type="button" class="tab-btn" data-status="pending" onclick="filterOrdersByStatus('pending', this)">Menunggu Pembayaran</button>
+        <button type="button" class="tab-btn" data-status="diproses" onclick="filterOrdersByStatus('diproses', this)">Sedang Diproses</button>
+        <button type="button" class="tab-btn" data-status="ready" onclick="filterOrdersByStatus('ready', this)">Siap Diambil (Pick Up)</button>
+        <button type="button" class="tab-btn" data-status="dikirim" onclick="filterOrdersByStatus('dikirim', this)">Dalam Pengiriman</button>
+        <button type="button" class="tab-btn" data-status="selesai" onclick="filterOrdersByStatus('selesai', this)">Selesai</button>
+        <button type="button" class="tab-btn" data-status="dibatalkan" onclick="filterOrdersByStatus('dibatalkan', this)">Dibatalkan</button>
+      </div>
+
+      <div class="admin-card">
+        <div class="table-filters-row">
+          <div class="search-box-admin">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+            <input type="text" id="filter-order-search" placeholder="Cari No. Order atau Nama Pelanggan..." oninput="renderAdminOrdersTable()">
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table-modern">
+            <thead>
+              <tr>
+                <th>No. Order</th>
+                <th>Waktu</th>
+                <th>Pelanggan</th>
+                <th>Detail Item</th>
+                <th>Pengiriman</th>
+                <th>Metode Bayar</th>
+                <th>Bukti Pembayaran</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th>Update Status</th>
+              </tr>
+            </thead>
+            <tbody id="admin-orders-table-tbody">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. USERS MANAGEMENT SECTION -->
+    <section class="admin-section hidden" id="sec-users">
+      <div class="section-toolbar">
+        <div>
+          <h2>Daftar Pengguna</h2>
+          <p>Informasi pelanggan dan akun yang terdaftar dalam sistem.</p>
+        </div>
+      </div>
+
+      <div class="admin-card">
+        <div class="table-filters-row">
+          <div class="search-box-admin">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 11.99 14 9.5 14z"/></svg>
+            <input type="text" id="filter-user-search" placeholder="Cari nama atau email pengguna..." oninput="renderAdminUsersTable()">
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table-modern">
+            <thead>
+              <tr>
+                <th>Pengguna</th>
+                <th>Email</th>
+                <th>No. Telepon</th>
+                <th>Role</th>
+                <th>Total Pesanan</th>
+                <th>Status Akun</th>
+              </tr>
+            </thead>
+            <tbody id="admin-users-table-tbody">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. REPORTS SECTION -->
+    <section class="admin-section hidden" id="sec-reports">
+      <div class="section-toolbar">
+        <div>
+          <h2>Laporan & Statistik</h2>
+          <p>Rekapitulasi penjualan produk UMKM Elok Mekar Sari.</p>
+        </div>
+      </div>
+
+      <!-- Sales Chart Card (from Flutter ReportsTab LineChart) -->
+      <div class="admin-card report-chart-card">
+        <div class="card-header-flex">
+          <div>
+            <h3>Penjualan Mingguan (7 Hari Terakhir)</h3>
+            <span class="chart-subtitle">Tren pendapatan harian pesanan selesai & dikonfirmasi</span>
+          </div>
+          <div class="chart-badge-tag">Statistik Realtime</div>
+        </div>
+        
+        <div class="chart-container" id="sales-chart-wrapper">
+          <!-- Dynamic SVG Chart rendered by JS -->
+        </div>
+      </div>
+
+      <!-- Summary Stats (Ringkasan Bulanan) -->
+      <div class="admin-stats-grid" style="margin-top: 20px;">
+        <div class="admin-stat-card card-green">
+          <div class="stat-data">
+            <span class="stat-label">Total Penjualan Masuk</span>
+            <span class="stat-value" id="rep-total-revenue">Rp 0</span>
+            <span class="stat-note">Akumulasi seluruh transaksi berhasil</span>
+          </div>
+        </div>
+        <div class="admin-stat-card card-blue">
+          <div class="stat-data">
+            <span class="stat-label">Order Berhasil</span>
+            <span class="stat-value" id="rep-done-orders">0 Transaksi</span>
+            <span class="stat-note">Pesanan status diproses / selesai</span>
+          </div>
+        </div>
+        <div class="admin-stat-card card-orange">
+          <div class="stat-data">
+            <span class="stat-label">Produk Terlaris</span>
+            <span class="stat-value" id="rep-top-product">-</span>
+            <span class="stat-note" id="rep-top-product-sub">Berdasarkan kuantitas terjual</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ringkasan Penjualan Tiap Produk -->
+      <div class="admin-card" style="margin-top: 20px;">
+        <h3>Ringkasan Penjualan Tiap Produk</h3>
+        <div class="table-responsive">
+          <table class="table-modern">
+            <thead>
+              <tr>
+                <th>Produk</th>
+                <th>Kategori</th>
+                <th>Harga Satuan</th>
+                <th>Jumlah Terjual</th>
+                <th>Subtotal Pendapatan</th>
+              </tr>
+            </thead>
+            <tbody id="rep-products-tbody">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- MODAL: ADD / EDIT PRODUCT -->
+  <div class="modal-overlay hidden" id="product-modal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 id="product-modal-title">Tambah Produk Baru</h3>
+        <button type="button" class="modal-close-btn" onclick="closeProductModal()">✕</button>
+      </div>
+
+      <form id="product-form" onsubmit="handleProductFormSubmit(event)">
+        <input type="hidden" id="pf-id">
+
+        <div class="form-group-admin">
+          <label for="pf-name">Nama Produk</label>
+          <input type="text" id="pf-name" placeholder="Contoh: Nugget Lele" required>
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-group-admin">
+            <label for="pf-category">Kategori</label>
+            <select id="pf-category" required>
+              <option value="makanan">Makanan</option>
+              <option value="jamur">Olahan Jamur</option>
+              <option value="lele">Olahan Lele</option>
+              <option value="snack">Snack</option>
+              <option value="minuman">Minuman</option>
+              <option value="lainnya">Lainnya</option>
+            </select>
+          </div>
+
+          <div class="form-group-admin">
+            <label for="pf-price">Harga (Rp)</label>
+            <input type="number" id="pf-price" placeholder="25000" min="500" required>
+          </div>
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-group-admin">
+            <label for="pf-stock">Stok Tersedia</label>
+            <input type="number" id="pf-stock" placeholder="50" min="0" required>
+          </div>
+
+          <div class="form-group-admin">
+            <label for="pf-image-select">Pilih Gambar dari Katalog</label>
+            <select id="pf-image-select" onchange="updateImagePreviewFromSelect()">
+              <option value="Nugget_Lele.jpeg">Nugget_Lele.jpeg</option>
+              <option value="Sempol_Jamur.jpeg">Sempol_Jamur.jpeg</option>
+              <option value="tahu_walik.jpeg">tahu_walik.jpeg</option>
+              <option value="Jangkrik_Crispi.jpeg">Jangkrik_Crispi.jpeg</option>
+              <option value="Sinom.jpeg">Sinom.jpeg</option>
+              <option value="Sate_Jamur.jpeg">Sate_Jamur.jpeg</option>
+              <option value="Bakso_Jamur.jpg">Bakso_Jamur.jpg</option>
+              <option value="Sate_Jamur_Tiram.jpg">Sate_Jamur_Tiram.jpg</option>
+              <option value="Abon_Lele.jpeg">Abon_Lele.jpeg</option>
+              <option value="upload">Unggah File Gambar...</option>
+              <option value="custom">URL Gambar Kustom...</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group-admin" id="upload-image-group" style="display: none;">
+          <label for="pf-upload-file">Pilih Berkas Gambar</label>
+          <input type="file" id="pf-upload-file" accept="image/*" onchange="handleImageFileUpload(event)">
+        </div>
+
+        <div class="form-group-admin" id="custom-image-group" style="display: none;">
+          <label for="pf-custom-image">URL Gambar Kustom</label>
+          <input type="text" id="pf-custom-image" placeholder="https://..." oninput="updateCustomImagePreview()">
+        </div>
+
+        <div class="image-preview-admin">
+          <label>Pratinjau Gambar:</label>
+          <div class="preview-box">
+            <img id="pf-preview-img" src="images/Nugget_Lele.jpeg" alt="Preview">
+          </div>
+        </div>
+
+        <div class="form-group-admin">
+          <label for="pf-desc">Deskripsi Produk</label>
+          <textarea id="pf-desc" rows="3" placeholder="Tuliskan deskripsi produk yang menarik..." required></textarea>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn-cancel" onclick="closeProductModal()">Batal</button>
+          <button type="submit" class="btn-submit-modal" id="btn-save-product">Simpan Produk</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: VIEW PROOF OF PAYMENT (STRUK) -->
+  <div class="modal-overlay hidden" id="proof-modal" onclick="closeProofModalOnBackdrop(event)">
+    <div class="modal-dialog modal-dialog-proof">
+      <div class="modal-header">
+        <h3>Bukti Pembayaran / Struk Pelanggan</h3>
+        <button type="button" class="modal-close-btn" onclick="closeProofModal()">✕</button>
+      </div>
+      <div class="proof-modal-body">
+        <div class="proof-img-container">
+          <img id="proof-img" src="" alt="Bukti Pembayaran">
+        </div>
+        <div class="proof-details" id="proof-details-text">
+          <!-- Filled by JS -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-primary-action" onclick="approveProofFromModal()">Konfirmasi Lunas & Proses</button>
+        <button type="button" class="btn-cancel" onclick="closeProofModal()">Tutup</button>
+      </div>
+    </div>
+  </div>
+
+    <!-- MODAL: LOGOUT CONFIRMATION -->
+  <div class="modal-overlay hidden" id="logout-modal" onclick="closeLogoutModalOnBackdrop(event)">
+    <div class="modal-dialog modal-dialog-sm">
+      <div class="modal-header">
+        <h3>Konfirmasi Logout</h3>
+        <button type="button" class="modal-close-btn" onclick="closeLogoutModal()">✕</button>
+      </div>
+      <div class="modal-body-pad">
+        <p style="font-size: 0.95rem; color: #4b5563; line-height: 1.5;">Apakah Anda yakin ingin logout dari akun admin?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-cancel" onclick="closeLogoutModal()">Batal</button>
+        <button type="button" class="btn-danger-action" onclick="confirmLogoutAdmin()">Keluar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <!-- SCRIPTS -->
+  <script src="js/app.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>
