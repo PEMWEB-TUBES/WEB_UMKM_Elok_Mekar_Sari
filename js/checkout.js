@@ -1,6 +1,4 @@
-// ========================================
-// CHECKOUT.JS - Full Step-by-Step Checkout
-// ========================================
+
 
 let currentDeliveryMethod = 'delivery';
 let currentPaymentMethod = 'transfer';
@@ -12,7 +10,6 @@ const BANK_ACCOUNTS = {
   'BNI': '0987-6543-21'
 };
 
-// 1. Initialize checkout on load
 function initCheckout() {
   const cart = getCart();
 
@@ -24,7 +21,6 @@ function initCheckout() {
     return;
   }
 
-  // Pre-fill user data if available
   const user = getCurrentUser();
   if (user) {
     const nameInput = document.getElementById('recipient-name');
@@ -33,7 +29,6 @@ function initCheckout() {
     if (phoneInput && !phoneInput.value) phoneInput.value = user.phone || '';
   }
 
-  // Set minimum date for pickup to today
   const pickupDateInput = document.getElementById('pickup-date');
   if (pickupDateInput) {
     const today = new Date().toISOString().split('T')[0];
@@ -46,7 +41,6 @@ function initCheckout() {
   selectPayment('transfer');
 }
 
-// 2. Render right side order summary
 function renderCheckoutSummary() {
   const cart = getCart();
   const summaryContainer = document.getElementById('checkout-items-summary');
@@ -95,7 +89,6 @@ function renderCheckoutSummary() {
   if (totalEl) totalEl.textContent = formatRupiah(grandTotal);
 }
 
-// 3. Delivery Method Toggle
 function selectDelivery(method) {
   currentDeliveryMethod = method;
 
@@ -123,7 +116,6 @@ function selectDelivery(method) {
   renderCheckoutSummary();
 }
 
-// 4. Payment Method Toggle
 function selectPayment(method) {
   currentPaymentMethod = method;
 
@@ -149,7 +141,6 @@ function selectPayment(method) {
   }
 }
 
-// 5. Bank selection
 function selectBank(bank, btn) {
   selectedBankName = bank;
   document.querySelectorAll('.bank-btn').forEach(b => b.classList.remove('active'));
@@ -161,7 +152,6 @@ function selectBank(bank, btn) {
   if (accountNumEl) accountNumEl.textContent = BANK_ACCOUNTS[bank] || '1234-5678-9012-3456';
 }
 
-// 6. E-Wallet selection
 function selectEwallet(wallet, btn) {
   selectedEwalletName = wallet;
   document.querySelectorAll('.ewallet-btn').forEach(b => b.classList.remove('active'));
@@ -171,7 +161,6 @@ function selectEwallet(wallet, btn) {
   if (walletNameEl) walletNameEl.textContent = wallet;
 }
 
-// Copy Bank Account
 function copyAccount() {
   const accountNum = document.getElementById('account-number')?.textContent || '';
   if (navigator.clipboard) {
@@ -183,13 +172,12 @@ function copyAccount() {
   }
 }
 
-// 7. Step Navigation & Validation
 function goToStep1() {
   showStep(1);
 }
 
 function goToStep2() {
-  // Validate Step 1
+
   if (currentDeliveryMethod === 'delivery') {
     const name = document.getElementById('recipient-name')?.value.trim();
     const phone = document.getElementById('recipient-phone')?.value.trim();
@@ -214,7 +202,7 @@ function goToStep2() {
 }
 
 function goToStep3() {
-  // Prepare Step 3 confirmation screen
+
   renderConfirmationStep();
   showStep(3);
 }
@@ -224,7 +212,6 @@ function showStep(stepNum) {
   const currentStepEl = document.getElementById('step-' + stepNum);
   if (currentStepEl) currentStepEl.classList.remove('hidden');
 
-  // Update step circles & line
   for (let i = 1; i <= 3; i++) {
     const stepEl = document.getElementById('step-' + i + '-indicator');
     if (!stepEl) continue;
@@ -240,7 +227,6 @@ function showStep(stepNum) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// 8. Render Confirmation Details
 function renderConfirmationStep() {
   const cart = getCart();
   const itemsContainer = document.getElementById('confirm-items');
@@ -248,7 +234,6 @@ function renderConfirmationStep() {
   const paymentContainer = document.getElementById('confirm-payment');
   const totalContainer = document.getElementById('confirm-total');
 
-  // Items
   if (itemsContainer) {
     itemsContainer.innerHTML = '';
     let subtotal = 0;
@@ -274,7 +259,6 @@ function renderConfirmationStep() {
     });
   }
 
-  // Shipping
   if (shippingContainer) {
     if (currentDeliveryMethod === 'delivery') {
       const name = document.getElementById('recipient-name')?.value.trim();
@@ -300,7 +284,6 @@ function renderConfirmationStep() {
     }
   }
 
-  // Payment
   if (paymentContainer) {
     if (currentPaymentMethod === 'transfer') {
       const acc = BANK_ACCOUNTS[selectedBankName] || '1234-5678-9012-3456';
@@ -316,14 +299,12 @@ function renderConfirmationStep() {
     }
   }
 
-  // Total
   const subtotal = getCartTotal();
   const shippingCost = (currentDeliveryMethod === 'delivery') ? 10000 : 0;
   const grandTotal = subtotal + shippingCost;
   if (totalContainer) totalContainer.textContent = formatRupiah(grandTotal);
 }
 
-// 9. Payment proof upload preview
 function previewProof(event) {
   const file = event.target.files && event.target.files[0];
   if (!file) return;
@@ -353,7 +334,7 @@ function handleDrop(event) {
     const file = event.dataTransfer.files[0];
     const fileInput = document.getElementById('proof-file');
     if (fileInput) {
-      // Simulate file input
+
       const dataTransfer = new DataTransfer();
       dataTransfer.items.add(file);
       fileInput.files = dataTransfer.files;
@@ -362,7 +343,6 @@ function handleDrop(event) {
   }
 }
 
-// 10. Place Order & Redirect to orders.html
 function placeOrder() {
   const cart = getCart();
   if (!cart || cart.length === 0) {
@@ -427,12 +407,10 @@ function placeOrder() {
     proofUrl: uploadedProofBase64 || null
   };
 
-  // Save order to localStorage
   const orders = getOrders();
   orders.unshift(newOrder);
   saveOrders(orders);
 
-  // Clear cart
   saveCart([]);
 
   showToast('Pesanan berhasil dibuat! Mengalihkan ke riwayat pesanan...', 'success');
@@ -442,7 +420,6 @@ function placeOrder() {
   }, 1200);
 }
 
-// 11. Event Listener initialization
 document.addEventListener('DOMContentLoaded', () => {
   initCheckout();
 });

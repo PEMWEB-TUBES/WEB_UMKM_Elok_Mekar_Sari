@@ -1,10 +1,7 @@
-// ========================================
-// APP.JS - Global shared utilities
-// ========================================
+
 
 const BASE_IMG = 'images/';
 
-// ---- PRODUCT DATA ----
 let PRODUCTS = [
   {
     id: 1,
@@ -107,7 +104,6 @@ let PRODUCTS = [
   }
 ];
 
-// Sync with localStorage ems_products if available
 try {
   let cached = JSON.parse(localStorage.getItem('ems_products') || 'null');
   if (cached && Array.isArray(cached) && cached.length > 0) {
@@ -118,7 +114,6 @@ try {
   }
 } catch (e) {}
 
-// ---- AUTH UTILITIES ----
 function getCurrentUser() {
   return JSON.parse(localStorage.getItem('ems_user') || 'null');
 }
@@ -139,7 +134,6 @@ function logout() {
   }
 }
 
-// ---- CART UTILITIES ----
 function getCart() {
   return JSON.parse(localStorage.getItem('ems_cart') || '[]');
 }
@@ -182,7 +176,6 @@ function getCartTotal() {
   }, 0);
 }
 
-// ---- FORMAT UTILITIES ----
 function formatRupiah(amount) {
   return 'Rp ' + amount.toLocaleString('id-ID');
 }
@@ -198,7 +191,6 @@ function formatDateTime(dateStr) {
     ' ' + d.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
 }
 
-// ---- TOAST ----
 function showToast(message, type = 'default') {
   const toast = document.getElementById('toast');
   if (!toast) return;
@@ -208,7 +200,6 @@ function showToast(message, type = 'default') {
   setTimeout(() => { toast.className = 'toast'; }, 3000);
 }
 
-// ---- NAVBAR ----
 function initNavbar() {
   const user = getCurrentUser();
   if (!user) return;
@@ -224,7 +215,6 @@ function initNavbar() {
   if (dropdownName) dropdownName.textContent = user.name || 'Pengguna';
   if (dropdownEmail) dropdownEmail.textContent = user.email || '';
 
-  // Admin badge
   if (user.role === 'admin') {
     const badge = document.createElement('span');
     badge.style.cssText = 'background:#2d7a2d;color:white;font-size:0.7rem;padding:2px 8px;border-radius:999px;font-weight:700;margin-left:6px;';
@@ -234,7 +224,6 @@ function initNavbar() {
 
   updateCartBadge();
 
-  // Navbar scroll effect
   window.addEventListener('scroll', () => {
     const navbar = document.getElementById('navbar');
     if (navbar) navbar.classList.toggle('scrolled', window.scrollY > 20);
@@ -246,7 +235,6 @@ function toggleUserMenu() {
   if (dropdown) dropdown.classList.toggle('open');
 }
 
-// Close dropdown when clicking outside
 document.addEventListener('click', (e) => {
   const navUser = document.querySelector('.nav-user');
   if (navUser && !navUser.contains(e.target)) {
@@ -255,7 +243,6 @@ document.addEventListener('click', (e) => {
   }
 });
 
-// ---- PASSWORD TOGGLE ----
 function togglePassword(inputId, btn) {
   const input = document.getElementById(inputId);
   if (!input) return;
@@ -272,7 +259,6 @@ function togglePassword(inputId, btn) {
   }
 }
 
-// ---- ORDERS STORAGE ----
 function getOrders() {
   const defaultOrders = [
     {
@@ -330,7 +316,6 @@ function getStatusInfo(status) {
   return map[status] || { label: status, icon: '📦', class: 'status-pending' };
 }
 
-// ---- INIT ----
 document.addEventListener('DOMContentLoaded', () => {
   initNavbar();
 });

@@ -30,7 +30,7 @@
   </nav>
 
   <div class="profile-layout container">
-    <!-- Sidebar -->
+
     <aside class="profile-sidebar">
       <div class="profile-card">
         <div class="profile-avatar-large" id="profile-avatar-display">U</div>
@@ -48,9 +48,8 @@
       </nav>
     </aside>
 
-    <!-- Main Content -->
     <main class="profile-main">
-      <!-- Info Section -->
+
       <div class="profile-section active" id="section-info">
         <div class="section-header-card">
           <h2>Informasi Pribadi</h2>
@@ -86,14 +85,12 @@
         </form>
       </div>
 
-      <!-- Address Section -->
       <div class="profile-section hidden" id="section-address">
         <div class="section-header-card">
           <h2>Alamat Saya</h2>
           <button class="btn-add-address" onclick="toggleAddAddress()">+ Tambah Alamat</button>
         </div>
 
-        <!-- Add Address Form -->
         <div class="add-address-form hidden" id="add-address-form">
           <h4>Tambah Alamat Baru</h4>
           <div class="form-group">
@@ -120,14 +117,12 @@
           </div>
         </div>
 
-        <!-- Address List -->
         <div id="address-list"></div>
         <div class="empty-address hidden" id="empty-address">
           <p>Belum ada alamat tersimpan</p>
         </div>
       </div>
 
-      <!-- Security Section -->
       <div class="profile-section hidden" id="section-security">
         <div class="section-header-card">
           <h2>Keamanan Akun</h2>
@@ -164,14 +159,13 @@
         </form>
       </div>
 
-      <!-- Orders History Section -->
       <div class="profile-section hidden" id="section-orders">
         <div class="section-header-card">
           <h2>Riwayat Pesanan</h2>
           <a href="orders.html" class="see-all-link">Lihat Semua →</a>
         </div>
         <div id="recent-orders-list">
-          <!-- Filled by JS -->
+
         </div>
       </div>
     </main>

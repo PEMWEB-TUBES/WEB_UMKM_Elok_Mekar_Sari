@@ -1,6 +1,4 @@
-/* ========================================
-   ADMIN DASHBOARD CSS - Elok Mekar Sari
-   ======================================== */
+
 
 :root {
   --admin-primary: #2d5a27;
@@ -24,7 +22,6 @@ body.admin-body {
   min-height: 100vh;
 }
 
-/* ==================== SIDEBAR ==================== */
 .admin-sidebar {
   width: 260px;
   background: #173315;
@@ -160,7 +157,6 @@ body.admin-body {
   color: #ff4d4d !important;
 }
 
-/* Sidebar Partners */
 .sidebar-partners {
   padding: 16px 20px;
   background: rgba(0, 0, 0, 0.2);
@@ -190,7 +186,6 @@ body.admin-body {
   padding: 2px 4px;
 }
 
-/* ==================== MAIN CONTENT ==================== */
 .admin-main {
   margin-left: 260px;
   flex: 1;
@@ -204,7 +199,6 @@ body.admin-body {
   margin-left: 0;
 }
 
-/* Topbar */
 .admin-topbar {
   background: #ffffff;
   height: 70px;
@@ -287,7 +281,6 @@ body.admin-body {
   color: #4b6b48;
 }
 
-/* Section Container */
 .admin-section {
   padding: 26px 28px;
   flex: 1;
@@ -297,7 +290,6 @@ body.admin-body {
   display: none !important;
 }
 
-/* Section Header Toolbar */
 .section-toolbar {
   display: flex;
   align-items: center;
@@ -320,7 +312,6 @@ body.admin-body {
   margin: 0;
 }
 
-/* Welcome Banner */
 .section-banner {
   background: linear-gradient(135deg, #2d5a27 0%, #1e3d1a 100%);
   color: #ffffff;
@@ -354,7 +345,6 @@ body.admin-body {
   border: 3px solid rgba(255, 255, 255, 0.3);
 }
 
-/* ==================== STATS CARDS ==================== */
 .admin-stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -424,14 +414,12 @@ body.admin-body {
   color: #8f9b8e;
 }
 
-/* Double Grid */
 .dashboard-double-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
   gap: 22px;
 }
 
-/* ==================== CARD & TABLES ==================== */
 .admin-card {
   background: #ffffff;
   border-radius: 16px;
@@ -470,7 +458,6 @@ body.admin-body {
   background: #edf5ed;
 }
 
-/* Table Filters Row */
 .table-filters-row {
   display: flex;
   gap: 14px;
@@ -513,7 +500,6 @@ body.admin-body {
   cursor: pointer;
 }
 
-/* Table Responsive */
 .table-responsive {
   width: 100%;
   overflow-x: auto;
@@ -545,7 +531,6 @@ body.admin-body {
   background: #fafcfa;
 }
 
-/* Product Thumbnail */
 .table-prod-img {
   width: 52px;
   height: 52px;
@@ -554,7 +539,6 @@ body.admin-body {
   border: 1px solid var(--admin-border);
 }
 
-/* Status Badges */
 .badge-status {
   display: inline-flex;
   align-items: center;
@@ -590,7 +574,6 @@ body.admin-body {
   font-weight: 700;
 }
 
-/* Action Buttons */
 .action-btns-group {
   display: flex;
   gap: 8px;
@@ -644,7 +627,6 @@ body.admin-body {
   background: #115e59;
 }
 
-/* Order Tabs */
 .order-tabs-admin {
   display: flex;
   gap: 8px;
@@ -678,7 +660,6 @@ body.admin-body {
   border-color: #2d5a27;
 }
 
-/* Status Dropdown in Table */
 .status-select-inline {
   padding: 6px 10px;
   border-radius: 8px;
@@ -691,7 +672,6 @@ body.admin-body {
   outline: none;
 }
 
-/* ==================== MODALS ==================== */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -850,7 +830,6 @@ body.admin-body {
   background: #23471e;
 }
 
-/* Proof Modal Details */
 .proof-img-container {
   width: 100%;
   max-height: 320px;
@@ -879,7 +858,6 @@ body.admin-body {
   line-height: 1.6;
 }
 
-/* Responsive */
 @media (max-width: 900px) {
   .admin-sidebar {
     transform: translateX(-260px);
@@ -895,11 +873,6 @@ body.admin-body {
   }
 }
 
-/* ========================================
-   COMPLAINT MANAGEMENT & EXPANDED ADMIN UI
-   ======================================== */
-
-/* Sidebar Complaint Count Badge */
 .sidebar-badge-count {
   margin-left: auto;
   background: #ef4444;
@@ -911,7 +884,6 @@ body.admin-body {
   line-height: 1;
 }
 
-/* Interactive Summary Cards */
 .card-interactive {
   cursor: pointer;
   transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s;
@@ -922,7 +894,6 @@ body.admin-body {
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
 }
 
-/* Quick Order Status Action Pills */
 .status-actions-cell {
   display: flex;
   flex-wrap: wrap;
@@ -953,7 +924,6 @@ body.admin-body {
 .pill-selesai { background: #2d5a27; }
 .pill-dibatalkan { background: #ef4444; }
 
-/* Status Badges */
 .badge-status.badge-pending { background: #fef3c7; color: #b45309; }
 .badge-status.badge-diproses { background: #dbeafe; color: #1d4ed8; }
 .badge-status.badge-ready { background: #ccfbf1; color: #0f766e; }
@@ -961,7 +931,6 @@ body.admin-body {
 .badge-status.badge-selesai { background: #dcfce7; color: #15803d; }
 .badge-status.badge-dibatalkan { background: #fee2e2; color: #b91c1c; }
 
-/* Priority Badges */
 .badge-priority {
   display: inline-flex;
   align-items: center;
@@ -997,7 +966,6 @@ body.admin-body {
   border: 1px solid #dcfce7;
 }
 
-/* Complaints Grid / Cards */
 .complaints-list-grid {
   display: flex;
   flex-direction: column;
@@ -1116,7 +1084,6 @@ body.admin-body {
   cursor: pointer;
 }
 
-/* Modal Chat Keluhan */
 .modal-dialog-chat {
   max-width: 600px;
   height: 85vh;
@@ -1294,7 +1261,6 @@ body.admin-body {
   background: #fee2e2;
 }
 
-/* User Toggle Switch (Aktif / Blokir) */
 .user-toggle-wrapper {
   display: inline-flex;
   align-items: center;
@@ -1355,7 +1321,6 @@ input:checked + .slider-round:before {
 .user-status-active { color: #16a34a; }
 .user-status-blocked { color: #dc2626; }
 
-/* Weekly Sales Chart Card */
 .report-chart-card {
   margin-top: 10px;
 }
@@ -1389,7 +1354,6 @@ input:checked + .slider-round:before {
   overflow: visible;
 }
 
-/* Logout Modal */
 .modal-dialog-sm {
   max-width: 380px;
 }

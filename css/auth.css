@@ -1,6 +1,4 @@
-/* ========================================
-   AUTH PAGE CSS - Clean Minimalist White Layout
-   ======================================== */
+
 
 .auth-body {
   background: #ffffff;
@@ -15,12 +13,10 @@
   color: #1a1a2e;
 }
 
-/* Background Animated Shapes - Removed for clean white look */
 .auth-bg {
   display: none !important;
 }
 
-/* Centered Wrapper */
 .auth-wrapper {
   width: 100%;
   max-width: 480px;
@@ -30,7 +26,6 @@
   margin: auto;
 }
 
-/* Auth Card */
 .auth-card {
   background: #ffffff;
   width: 100%;
@@ -41,7 +36,6 @@
   position: relative;
 }
 
-/* Brand Header */
 .auth-brand-header {
   text-align: center;
   margin-bottom: 24px;
@@ -76,7 +70,6 @@
   font-weight: 500;
 }
 
-/* Auth Tabs */
 .auth-tabs {
   display: flex;
   background: #f1f5f1;
@@ -110,7 +103,6 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
-/* Form Styles */
 .auth-form {
   animation: fadeIn 0.25s ease;
 }
@@ -223,7 +215,6 @@
   display: block;
 }
 
-/* Options */
 .form-options {
   display: flex;
   align-items: center;
@@ -259,7 +250,6 @@
   text-decoration: underline;
 }
 
-/* Main Auth Button */
 .btn-auth {
   width: 100%;
   padding: 13px;
@@ -298,7 +288,6 @@
   transform: translateX(4px);
 }
 
-/* Divider */
 .auth-divider {
   position: relative;
   text-align: center;
@@ -320,7 +309,6 @@
 .auth-divider::before { left: 0; }
 .auth-divider::after { right: 0; }
 
-/* Google Button */
 .social-auth {
   display: flex;
   flex-direction: column;
@@ -358,7 +346,6 @@
   flex-shrink: 0;
 }
 
-/* Toast */
 .toast {
   position: fixed;
   bottom: 28px;
@@ -395,7 +382,6 @@
   background: #c62828;
 }
 
-/* Responsiveness */
 @media (max-width: 500px) {
   .auth-card {
     padding: 30px 20px;

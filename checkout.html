@@ -30,7 +30,6 @@
     </div>
   </div>
 
-  <!-- Checkout Steps -->
   <div class="checkout-steps container">
     <div class="step active" id="step-1-indicator">
       <div class="step-circle">1</div>
@@ -49,15 +48,13 @@
   </div>
 
   <div class="checkout-layout container">
-    <!-- Left: Forms -->
+
     <div class="checkout-forms">
 
-      <!-- Step 1: Shipping -->
       <div class="checkout-step" id="step-1">
         <div class="step-card">
           <h3 class="step-card-title">Metode Pengiriman</h3>
-          
-          <!-- Delivery Method -->
+
           <div class="delivery-methods">
             <label class="delivery-option" onclick="selectDelivery('delivery')">
               <input type="radio" name="delivery-method" value="delivery" id="delivery-radio" checked>
@@ -81,7 +78,6 @@
             </label>
           </div>
 
-          <!-- Pickup Info -->
           <div class="pickup-info hidden" id="pickup-info">
             <div class="pickup-detail-card">
               <h4>Informasi Pick Up</h4>
@@ -106,7 +102,6 @@
             </div>
           </div>
 
-          <!-- Delivery Address -->
           <div class="address-form" id="address-form">
             <h4>Alamat Pengiriman</h4>
             <div class="form-row">
@@ -142,11 +137,10 @@
         </div>
       </div>
 
-      <!-- Step 2: Payment -->
       <div class="checkout-step hidden" id="step-2">
         <div class="step-card">
           <h3 class="step-card-title">Metode Pembayaran</h3>
-          
+
           <div class="payment-methods">
             <label class="payment-option" onclick="selectPayment('transfer')">
               <input type="radio" name="payment-method" value="transfer" id="transfer-radio" checked>
@@ -170,7 +164,6 @@
             </label>
           </div>
 
-          <!-- Bank Transfer Details -->
           <div class="bank-details" id="bank-details">
             <h4>Nomor Rekening Bank:</h4>
             <div class="bank-account-card">
@@ -183,7 +176,6 @@
             </div>
           </div>
 
-          <!-- E-Wallet Details -->
           <div class="ewallet-details hidden" id="ewallet-details">
             <h4>Nomor E-Wallet:</h4>
             <div class="ewallet-account-card">
@@ -200,11 +192,10 @@
         </div>
       </div>
 
-      <!-- Step 3: Confirmation -->
       <div class="checkout-step hidden" id="step-3">
         <div class="step-card">
           <h3 class="step-card-title">Konfirmasi Pesanan</h3>
-          
+
           <div class="confirmation-section">
             <h4>Detail Produk</h4>
             <div id="confirm-items"></div>
@@ -220,7 +211,6 @@
             <div id="confirm-payment"></div>
           </div>
 
-          <!-- Upload Bukti Bayar -->
           <div class="payment-proof-section" id="payment-proof-section">
             <h4>Upload Bukti Pembayaran</h4>
             <p class="proof-note">Setelah melakukan transfer, upload bukti pembayaran di bawah ini</p>
@@ -251,7 +241,6 @@
 
     </div>
 
-    <!-- Right: Order Summary -->
     <div class="checkout-summary">
       <div class="summary-card">
         <h3>Ringkasan</h3>

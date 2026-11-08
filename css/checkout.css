@@ -1,6 +1,5 @@
-/* ========== CHECKOUT CSS ========== */
 
-/* Steps Indicator */
+
 .checkout-steps {
   display: flex;
   align-items: center;
@@ -41,7 +40,6 @@
 .step-line { flex: 1; height: 2px; background: var(--border); margin: 0 8px; margin-bottom: 22px; }
 .step.done ~ .step-line { background: var(--success); }
 
-/* Layout */
 .checkout-layout {
   display: grid;
   grid-template-columns: 1fr 340px;
@@ -60,7 +58,6 @@
 }
 .step-card-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 20px; }
 
-/* Delivery Methods */
 .delivery-methods { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
 .delivery-option { cursor: pointer; }
 .delivery-option input { display: none; }
@@ -93,7 +90,6 @@
   margin-top: 4px;
 }
 
-/* Pickup Info */
 .pickup-info { margin-bottom: 20px; }
 .pickup-detail-card {
   background: #e8f5e9;
@@ -117,11 +113,9 @@
 }
 .pickup-date-input:focus, .pickup-time-select:focus { border-color: var(--primary); }
 
-/* Address Form */
 .address-form { border-top: 1px solid var(--border); padding-top: 20px; }
 .address-form h4 { font-weight: 700; margin-bottom: 16px; }
 
-/* Payment Methods */
 .payment-methods { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
 .payment-option { cursor: pointer; }
 .payment-option input { display: none; }
@@ -142,7 +136,6 @@
 .payment-name { font-weight: 700; font-size: 0.95rem; }
 .payment-desc { font-size: 0.8rem; color: var(--text-muted); }
 
-/* Bank Details */
 .bank-details, .ewallet-details { background: var(--bg-page); border-radius: var(--radius); padding: 16px; margin-bottom: 16px; }
 .bank-details h4, .ewallet-details h4 { font-size: 0.9rem; font-weight: 700; margin-bottom: 12px; }
 .bank-options, .ewallet-options { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
@@ -196,7 +189,6 @@
 .ewallet-number { font-size: 1.2rem; font-weight: 800; letter-spacing: 1px; }
 .ewallet-holder { font-size: 0.78rem; color: var(--text-muted); margin-top: 4px; }
 
-/* Confirmation */
 .confirmation-section {
   margin-bottom: 20px;
   padding-bottom: 20px;
@@ -221,7 +213,6 @@
 .confirm-info-row { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 6px; }
 .confirm-info-row strong { color: var(--text-primary); }
 
-/* Upload Area */
 .payment-proof-section { margin-bottom: 20px; }
 .payment-proof-section h4 { font-weight: 700; margin-bottom: 6px; }
 .proof-note { font-size: 0.83rem; color: var(--text-muted); margin-bottom: 12px; }
@@ -239,7 +230,6 @@
 .upload-area span { font-size: 0.8rem; color: var(--text-muted); }
 .upload-area img#proof-preview { max-width: 100%; max-height: 200px; border-radius: var(--radius); object-fit: cover; }
 
-/* Confirm Total */
 .confirm-total {
   display: flex;
   justify-content: space-between;
@@ -252,7 +242,6 @@
 .confirm-total-label { font-size: 1rem; font-weight: 700; }
 .confirm-total-value { font-size: 1.6rem; font-weight: 800; color: var(--primary); }
 
-/* Step Actions */
 .step-actions { display: flex; gap: 12px; margin-top: 8px; }
 .btn-back {
   padding: 12px 24px;
@@ -297,7 +286,6 @@
 }
 .btn-confirm:hover { transform: translateY(-2px); }
 
-/* Checkout Summary */
 .checkout-summary { position: sticky; top: 80px; }
 .summary-card {
   background: white;

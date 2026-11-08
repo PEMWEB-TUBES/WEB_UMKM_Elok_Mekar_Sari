@@ -1,4 +1,4 @@
-// orders.js - Handles order list, tabs, status filtering, and order detail modal
+
 
 let currentFilter = 'all';
 
@@ -73,7 +73,7 @@ function renderOrders() {
 
 function filterOrders(status, btn) {
   currentFilter = status;
-  // Update active tab UI
+
   document.querySelectorAll('.order-tab').forEach(t => t.classList.toggle('active', t.dataset.status === status));
   renderOrders();
 }
@@ -131,14 +131,14 @@ function closeOrderModal(event) {
 function openUploadProofModal(orderId) {
   document.getElementById('upload-order-id').textContent = orderId;
   document.getElementById('upload-modal').classList.remove('hidden');
-  // Store current order id for later use
+
   window.currentProofOrderId = orderId;
 }
 
 function closeUploadProofModal(event) {
   if (event && event.target.id !== 'upload-modal') return;
   document.getElementById('upload-modal').classList.add('hidden');
-  // Reset file input and preview
+
   const preview = document.getElementById('modal-proof-preview');
   const placeholder = document.getElementById('modal-upload-placeholder');
   if (preview) preview.classList.add('hidden');
@@ -155,12 +155,12 @@ function handleModalProofUpload(event) {
     document.getElementById('modal-proof-preview').src = url;
     document.getElementById('modal-proof-preview').classList.remove('hidden');
     document.getElementById('modal-upload-placeholder').classList.add('hidden');
-    // Save to order (simulate)
+
     const orders = getOrders();
     const order = orders.find(o => o.id === window.currentProofOrderId);
     if (order) {
       order.proofUrl = url;
-      order.status = 'processing'; // advance status after proof
+      order.status = 'processing';
       saveOrders(orders);
       renderOrders();
     }
@@ -169,14 +169,14 @@ function handleModalProofUpload(event) {
 }
 
 function submitProof() {
-  // proof already saved in handleModalProofUpload
+
   closeUploadProofModal();
   showToast('Bukti pembayaran berhasil diupload.', 'success');
 }
 
 document.addEventListener('DOMContentLoaded', () => {
   renderOrders();
-  // Modal close listeners
+
   document.getElementById('order-modal')?.addEventListener('click', closeOrderModal);
   document.getElementById('upload-modal')?.addEventListener('click', closeUploadProofModal);
   document.getElementById('modal-proof-file')?.addEventListener('change', handleModalProofUpload);

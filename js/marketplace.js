@@ -1,6 +1,4 @@
-// ========================================
-// MARKETPLACE.JS - Product Catalog & Filtering
-// ========================================
+
 
 let currentCategory = 'all';
 let currentSearch = '';
@@ -9,7 +7,6 @@ let currentMaxPrice = Infinity;
 let currentSort = 'default';
 let activeModalProduct = null;
 
-// Render Products Grid
 function renderProducts(productsToRender) {
   const grid = document.getElementById('products-grid');
   const emptyState = document.getElementById('empty-state');
@@ -57,22 +54,20 @@ function renderProducts(productsToRender) {
   `).join('');
 }
 
-// Compute filtered & sorted products
 function getFilteredProducts() {
   let list = PRODUCTS.filter(p => {
-    // Category match
+
     const matchCategory = currentCategory === 'all' || p.category === currentCategory;
-    // Search match
-    const matchSearch = !currentSearch || 
+
+    const matchSearch = !currentSearch ||
       p.name.toLowerCase().includes(currentSearch.toLowerCase()) ||
       p.description.toLowerCase().includes(currentSearch.toLowerCase());
-    // Price match
+
     const matchPrice = p.price >= currentMinPrice && p.price <= currentMaxPrice;
 
     return matchCategory && matchSearch && matchPrice;
   });
 
-  // Sort
   if (currentSort === 'price-asc') {
     list.sort((a, b) => a.price - b.price);
   } else if (currentSort === 'price-desc') {
@@ -86,7 +81,6 @@ function getFilteredProducts() {
   return list;
 }
 
-// Triggered by search, price, or sort inputs
 function filterProducts() {
   const searchInput = document.getElementById('search-input');
   const priceMin = document.getElementById('price-min');
@@ -100,10 +94,9 @@ function filterProducts() {
 
   renderProducts();
 }
-// Alias for compatibility
+
 const applyFilters = filterProducts;
 
-// Category selection
 function setCategory(category, buttonElement) {
   currentCategory = category;
 
@@ -113,10 +106,9 @@ function setCategory(category, buttonElement) {
 
   filterProducts();
 }
-// Alias for compatibility
+
 const filterByCategory = (cat) => setCategory(cat, null);
 
-// Reset filters
 function resetFilters() {
   currentCategory = 'all';
   currentSearch = '';
@@ -143,14 +135,12 @@ function resetFilters() {
   renderProducts();
 }
 
-// Mobile sidebar toggle
 function toggleMobileFilter() {
   const sidebar = document.getElementById('filter-sidebar');
   if (sidebar) sidebar.classList.toggle('open');
 }
 const toggleMobileFilters = toggleMobileFilter;
 
-// Product detail modal
 function openProductModal(productId) {
   const product = PRODUCTS.find(p => p.id === productId);
   if (!product) return;
@@ -215,7 +205,6 @@ function shareProduct() {
   }
 }
 
-// Initial Render & URL Parameter Handling
 document.addEventListener('DOMContentLoaded', () => {
   const urlParams = new URLSearchParams(window.location.search);
   const catParam = urlParams.get('cat');
@@ -230,7 +219,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   renderProducts();
 
-  // If directed to a specific product (e.g. from Produk Unggulan)
   if (productParam) {
     let targetProduct = null;
     if (!isNaN(productParam)) {

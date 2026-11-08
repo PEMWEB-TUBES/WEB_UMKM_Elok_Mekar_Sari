@@ -1,4 +1,4 @@
-// profile.js - Handles user profile display, edit, address management, and order history
+
 
 function initProfile() {
   const user = requireAuth();
@@ -68,9 +68,9 @@ function changePassword() {
     showToast('Masukkan password baru.', 'error');
     return;
   }
-  // In demo we simply store password hash placeholder
+
   const user = getCurrentUser();
-  user.passwordHash = btoa(pwd); // NOT SECURE, just demo
+  user.passwordHash = btoa(pwd);
   localStorage.setItem('ems_user', JSON.stringify(user));
   showToast('Password berhasil diubah.', 'success');
   document.getElementById('new-password').value = '';

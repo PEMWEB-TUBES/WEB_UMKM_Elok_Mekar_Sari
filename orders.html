@@ -54,7 +54,7 @@
   </div>
 
   <div class="container">
-    <!-- Order Status Tabs -->
+
     <div class="order-tabs">
       <button class="order-tab active" onclick="filterOrders('all', this)">Semua</button>
       <button class="order-tab" onclick="filterOrders('pending', this)">Menunggu Bayar</button>
@@ -64,12 +64,10 @@
       <button class="order-tab" onclick="filterOrders('done', this)">Selesai</button>
     </div>
 
-    <!-- Orders List -->
     <div id="orders-list">
-      <!-- Filled by JS -->
+
     </div>
 
-    <!-- Empty Orders -->
     <div class="empty-orders hidden" id="empty-orders">
       <div class="empty-icon">📦</div>
       <h3>Belum Ada Pesanan</h3>
@@ -78,7 +76,6 @@
     </div>
   </div>
 
-  <!-- Order Detail Modal -->
   <div class="modal-overlay hidden" id="order-modal" onclick="closeOrderModal(event)">
     <div class="modal-content order-modal-content">
       <button class="modal-close" onclick="closeOrderDetailModal()">✕</button>
@@ -87,7 +84,6 @@
     </div>
   </div>
 
-  <!-- Upload Proof Modal -->
   <div class="modal-overlay hidden" id="upload-modal" onclick="closeUploadModal(event)">
     <div class="modal-content upload-modal-content">
       <button class="modal-close" onclick="closeUploadProofModal()">✕</button>

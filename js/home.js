@@ -1,4 +1,4 @@
-// home.js - Handles hero slider, stats, category navigation
+
 
 let heroIndex = 0;
 const heroSlides = document.querySelectorAll('.hero-slide');
@@ -37,8 +37,6 @@ function initHero() {
   const slides = document.querySelectorAll('.hero-slide');
   if (!slides.length) return;
   showHeroSlide(0);
-  document.querySelector('.hero-next')?.addEventListener('click', nextHero);
-  document.querySelector('.hero-prev')?.addEventListener('click', prevHero);
   const dots = document.querySelectorAll('.hero-dot');
   dots.forEach((dot, idx) => {
     dot.addEventListener('click', () => showHeroSlide(idx));
@@ -48,12 +46,11 @@ function initHero() {
   }
 }
 
-// Stats counters (simple static values from app.js)
 function initStats() {
   const stats = [
     { selector: '#stat-products', value: PRODUCTS.length },
-    { selector: '#stat-users', value: 48 }, // demo
-    { selector: '#stat-orders', value: 124 }, // demo
+    { selector: '#stat-users', value: 48 },
+    { selector: '#stat-orders', value: 124 },
     { selector: '#stat-revenue', value: 1250000 }
   ];
   stats.forEach(s => {
@@ -62,14 +59,12 @@ function initStats() {
   });
 }
 
-// Render Featured Products (3 Produk Unggulan)
 function renderFeaturedProducts() {
   const container = document.getElementById('featured-products');
   if (!container || typeof PRODUCTS === 'undefined') return;
 
-  // Filter 3 produk unggulan
-  let featured = PRODUCTS.filter(p => 
-    [2, 3, 4].includes(p.id) || 
+  let featured = PRODUCTS.filter(p =>
+    [2, 3, 4].includes(p.id) ||
     ['Sempol Jamur', 'Tahu Walik', 'Sate Jamur', 'Sate Jamur Tiram'].includes(p.name)
   );
 

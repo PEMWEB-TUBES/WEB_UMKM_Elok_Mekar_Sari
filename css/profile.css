@@ -1,4 +1,4 @@
-/* ========== PROFILE CSS ========== */
+
 
 .profile-layout {
   display: grid;
@@ -8,7 +8,6 @@
   align-items: start;
 }
 
-/* Sidebar */
 .profile-sidebar { position: sticky; top: 80px; }
 .profile-card {
   background: white;
@@ -73,7 +72,6 @@
 .logout-nav:hover { background: #ffebee !important; }
 .profile-nav-divider { height: 1px; background: var(--border); margin: 6px 0; }
 
-/* Main Content */
 .profile-main { display: flex; flex-direction: column; gap: 0; }
 .profile-section { display: none; }
 .profile-section.active { display: block; }
@@ -110,7 +108,6 @@
 .btn-save:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(45,122,45,0.3); }
 .readonly-input { background: var(--bg-page) !important; cursor: not-allowed; }
 
-/* Address Section */
 .btn-add-address {
   padding: 9px 18px;
   background: var(--primary);
@@ -172,7 +169,6 @@
 .btn-delete-addr { border-color: var(--danger); color: var(--danger); background: white; }
 .btn-delete-addr:hover { background: #ffebee; }
 
-/* Recent Orders */
 .recent-order-row {
   display: flex;
   align-items: center;

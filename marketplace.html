@@ -12,7 +12,6 @@
 </head>
 <body>
 
-  <!-- Navbar -->
   <nav class="navbar" id="navbar">
     <div class="nav-container">
       <a href="home.html" class="nav-brand">
@@ -50,7 +49,6 @@
     </div>
   </nav>
 
-  <!-- Page Header -->
   <div class="page-header">
     <div class="container">
       <h1 class="page-title"><img src="Icon/keranjang.png" alt="" class="title-icon-img" style="filter: brightness(0) invert(1);"> Marketplace</h1>
@@ -58,16 +56,14 @@
     </div>
   </div>
 
-  <!-- Main Content -->
   <div class="marketplace-layout">
-    <!-- Sidebar Filter -->
+
     <aside class="filter-sidebar" id="filter-sidebar">
       <div class="filter-header">
         <h3>Filter</h3>
         <button class="filter-reset" onclick="resetFilters()">Reset</button>
       </div>
 
-      <!-- Search -->
       <div class="filter-section">
         <label class="filter-label">Cari Produk</label>
         <div class="search-input-wrapper">
@@ -76,7 +72,6 @@
         </div>
       </div>
 
-      <!-- Category -->
       <div class="filter-section">
         <label class="filter-label">Kategori</label>
         <div class="filter-options">
@@ -88,7 +83,6 @@
         </div>
       </div>
 
-      <!-- Price Range -->
       <div class="filter-section">
         <label class="filter-label">Harga</label>
         <div class="price-inputs">
@@ -98,7 +92,6 @@
         </div>
       </div>
 
-      <!-- Sort -->
       <div class="filter-section">
         <label class="filter-label">Urutkan</label>
         <select id="sort-select" onchange="filterProducts()" class="filter-select">
@@ -111,9 +104,8 @@
       </div>
     </aside>
 
-    <!-- Products Area -->
     <main class="marketplace-main">
-      <!-- Mobile Filter Toggle -->
+
       <div class="mobile-filter-bar">
         <button class="mobile-filter-btn" onclick="toggleMobileFilter()">
           🔽 Filter
@@ -127,12 +119,10 @@
         </select>
       </div>
 
-      <!-- Products Grid -->
       <div class="products-grid" id="products-grid">
-        <!-- Filled by JS -->
+
       </div>
 
-      <!-- Empty State -->
       <div class="empty-state hidden" id="empty-state">
         <div class="empty-icon"><img src="Icon/search.png" alt="Tidak Ditemukan" class="empty-icon-img"></div>
         <h3>Produk Tidak Ditemukan</h3>
@@ -142,7 +132,6 @@
     </main>
   </div>
 
-  <!-- Product Detail Modal -->
   <div class="modal-overlay hidden" id="product-modal" onclick="closeModal(event)">
     <div class="modal-content product-modal">
       <button class="modal-close" onclick="closeProductModal()">✕</button>
@@ -174,7 +163,6 @@
     </div>
   </div>
 
-  <!-- Toast -->
   <div class="toast" id="toast"></div>
 
   <script src="js/app.js"></script>

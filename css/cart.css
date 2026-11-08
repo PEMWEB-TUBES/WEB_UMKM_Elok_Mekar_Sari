@@ -1,4 +1,4 @@
-/* ========== CART CSS ========== */
+
 
 .cart-layout {
   display: grid;
@@ -84,7 +84,6 @@
 }
 .cart-remove-btn:hover { background: #ffebee; }
 
-/* Order Summary */
 .order-summary {
   background: white;
   border-radius: var(--radius-lg);

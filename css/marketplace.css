@@ -1,4 +1,4 @@
-/* ========== MARKETPLACE CSS ========== */
+
 
 .marketplace-layout {
   display: grid;
@@ -9,7 +9,6 @@
   padding: 24px 20px;
 }
 
-/* Sidebar */
 .filter-sidebar {
   background: white;
   border-radius: var(--radius-lg);
@@ -110,7 +109,6 @@
 }
 .filter-select:focus { border-color: var(--primary); }
 
-/* Products Main */
 .marketplace-main { min-width: 0; }
 .mobile-filter-bar {
   display: none;
@@ -141,7 +139,6 @@
   outline: none;
 }
 
-/* Product Modal */
 .product-modal {
   max-width: 780px;
 }
@@ -241,7 +238,6 @@
 }
 .btn-share:hover { border-color: var(--primary); background: var(--primary-soft); }
 
-/* Responsive */
 @media (max-width: 900px) {
   .marketplace-layout { grid-template-columns: 1fr; }
   .filter-sidebar { display: none; position: fixed; inset: 0; z-index: 300; border-radius: 0; overflow-y: auto; top: auto; bottom: 0; height: 90vh; border-radius: 20px 20px 0 0; }

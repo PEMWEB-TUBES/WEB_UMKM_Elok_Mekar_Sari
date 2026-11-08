@@ -1,8 +1,3 @@
-// ========================================
-// AUTH.JS - Login & Registration Controller
-// ========================================
-
-// Toast notification helper
 function showToast(message, type = 'default') {
   const toast = document.getElementById('toast');
   if (!toast) return;
@@ -15,7 +10,6 @@ function showToast(message, type = 'default') {
   }, 2800);
 }
 
-// Toggle between Login & Register tabs
 function showTab(tab) {
   const loginForm = document.getElementById('form-login');
   const registerForm = document.getElementById('form-register');
@@ -36,7 +30,6 @@ function showTab(tab) {
 }
 const showAuthTab = showTab;
 
-// Toggle password visibility
 function togglePassword(inputId, btn) {
   const input = document.getElementById(inputId);
   if (!input) return;
@@ -53,7 +46,6 @@ function togglePassword(inputId, btn) {
   }
 }
 
-// Handle Login Form Submit
 function login(event) {
   if (event) event.preventDefault();
   const emailInput = document.getElementById('login-email');
@@ -67,9 +59,8 @@ function login(event) {
     return;
   }
 
-  // Cek apakah akun adalah Admin khusus
   const isTargetAdmin = (email.toLowerCase() === 'admin123' || email.toLowerCase() === 'admin' || email.toLowerCase() === 'tes123@');
-  
+
   if (isTargetAdmin) {
     const validPasswords = ['admin 123', 'admin123', 'Tes123'];
     if (!validPasswords.includes(password)) {
@@ -78,10 +69,31 @@ function login(event) {
     }
   }
 
+  const isTesAja = (email.toLowerCase() === 'tesaja');
+  if (isTesAja) {
+    if (password !== 'Tes123') {
+      showToast('Password salah! Gunakan: Tes123', 'error');
+      return;
+    }
+  }
+
+  const users = JSON.parse(localStorage.getItem('ems_users') || '[]');
+  const registeredUser = users.find(u => u.email.toLowerCase() === email.toLowerCase());
+  if (registeredUser && registeredUser.password && !isTargetAdmin && !isTesAja) {
+    if (registeredUser.password !== password) {
+      showToast('Password akun salah!', 'error');
+      return;
+    }
+    if (registeredUser.active === false) {
+      showToast('Akun Anda telah dinonaktifkan oleh Admin.', 'error');
+      return;
+    }
+  }
+
   const isAdmin = isTargetAdmin || email.toLowerCase().includes('admin');
-  const displayName = isAdmin 
-    ? 'Admin Utama' 
-    : (email.split('@')[0].charAt(0).toUpperCase() + email.split('@')[0].slice(1));
+  const displayName = isAdmin
+    ? 'Admin Utama'
+    : (isTesAja ? 'Tes Aja' : (registeredUser ? registeredUser.name : (email.split('@')[0].charAt(0).toUpperCase() + email.split('@')[0].slice(1))));
 
   const user = {
     name: displayName,
@@ -91,15 +103,14 @@ function login(event) {
 
   localStorage.setItem('ems_user', JSON.stringify(user));
 
-  // Simpan ke daftar user lokal jika bukan admin dan belum ada di ems_users
   if (!isAdmin) {
-    const users = JSON.parse(localStorage.getItem('ems_users') || '[]');
-    if (!users.some(u => u.email === email)) {
+    if (!users.some(u => u.email.toLowerCase() === email.toLowerCase())) {
       users.push({
         id: Date.now().toString(),
         name: displayName,
         email: email,
         phone: '-',
+        password: password,
         role: 'customer',
         active: true,
         registeredAt: new Date().toISOString()
@@ -108,14 +119,13 @@ function login(event) {
     }
   }
 
-  showToast(isAdmin ? 'Berhasil masuk ke Dashboard Admin! 🛡️' : `Selamat datang, ${user.name}! 🎉`, 'success');
+  showToast(isAdmin ? 'Berhasil masuk ke Dashboard Admin!' : `Selamat datang, ${user.name}!`, 'success');
 
   setTimeout(() => {
     window.location.href = isAdmin ? 'admin.html' : 'home.html';
   }, 900);
 }
 
-// Login with Google
 function loginWithGoogle() {
   const googleUser = {
     name: 'Pengguna Google',
@@ -126,7 +136,6 @@ function loginWithGoogle() {
 
   localStorage.setItem('ems_user', JSON.stringify(googleUser));
 
-  // Simpan ke daftar user lokal jika belum ada di ems_users
   const users = JSON.parse(localStorage.getItem('ems_users') || '[]');
   if (!users.some(u => u.email === googleUser.email)) {
     users.push({
@@ -141,10 +150,13 @@ function loginWithGoogle() {
     localStorage.setItem('ems_users', JSON.stringify(users));
   }
 
-  window.location.href = 'home.html';
+  showToast(`Selamat datang, ${googleUser.name}!`, 'success');
+
+  setTimeout(() => {
+    window.location.href = 'home.html';
+  }, 900);
 }
 
-// Handle Register Form Submit
 function register(event) {
   if (event) event.preventDefault();
 
@@ -187,23 +199,20 @@ function register(event) {
     registeredAt: new Date().toISOString()
   };
 
-  // Simpan user aktif
   localStorage.setItem('ems_user', JSON.stringify(newUser));
 
-  // Simpan ke daftar user lokal untuk laporan admin
   const users = JSON.parse(localStorage.getItem('ems_users') || '[]');
   if (!users.some(u => u.email === email)) {
     users.push(newUser);
     localStorage.setItem('ems_users', JSON.stringify(users));
   }
 
-  showToast('Pendaftaran akun berhasil! 🎉', 'success');
+  showToast('Pendaftaran akun berhasil!', 'success');
   setTimeout(() => {
     window.location.href = isAdmin ? 'admin.html' : 'home.html';
   }, 1000);
 }
 
-// Event listener saat DOM siap
 document.addEventListener('DOMContentLoaded', () => {
   const tabLogin = document.getElementById('tab-login');
   const tabRegister = document.getElementById('tab-register');

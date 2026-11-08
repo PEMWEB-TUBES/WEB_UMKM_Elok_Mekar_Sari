@@ -1,7 +1,4 @@
-// ========================================
-// ADMIN.JS - Admin Panel Logic & Management
-// Referensi: Flutter Admin_Page.dart & Services
-// ========================================
+
 
 const REPO_IMG_BASE = 'images/';
 
@@ -9,7 +6,6 @@ let currentOrderFilter = 'all';
 let selectedProofOrderId = null;
 let uploadedProductImageBase64 = null;
 
-// Helper format rupiah with fallback
 function formatRp(amount) {
   if (typeof formatRupiah === 'function') {
     return formatRupiah(amount);
@@ -17,7 +13,6 @@ function formatRp(amount) {
   return 'Rp ' + Number(amount || 0).toLocaleString('id-ID');
 }
 
-// Helper format date string
 function formatOrderDate(dateInput) {
   if (!dateInput) return '-';
   const d = new Date(dateInput);
@@ -31,7 +26,6 @@ function formatOrderDate(dateInput) {
   });
 }
 
-// Generate standardized order ID format: EMS-YYYYMMDD-XXXX
 function formatDisplayOrderId(rawId, dateInput) {
   if (!rawId) return 'EMS-ORD';
   if (String(rawId).startsWith('EMS-202')) return rawId;
@@ -44,10 +38,6 @@ function formatDisplayOrderId(rawId, dateInput) {
   return `EMS-${year}${month}${day}-${short}`;
 }
 
-// ========================================
-// 1. AUTHENTICATION & ACCESS CONTROL
-// ========================================
-
 function checkAdminAccess() {
   let user = null;
   try {
@@ -57,7 +47,7 @@ function checkAdminAccess() {
   }
 
   if (!user || user.role !== 'admin') {
-    // If not marked admin, check if credentials match default admin
+
     if (user && (user.email === 'Tes123@' || (user.email && user.email.toLowerCase().includes('admin')))) {
       user.role = 'admin';
       localStorage.setItem('ems_user', JSON.stringify(user));
@@ -74,7 +64,6 @@ function checkAdminAccess() {
     }
   }
 
-  // Update profile pill in topbar
   const nameEl = document.querySelector('.admin-pill-name');
   const emailEl = document.querySelector('.admin-pill-email');
   if (nameEl) nameEl.textContent = user.name || 'Admin Utama';
@@ -83,21 +72,15 @@ function checkAdminAccess() {
   return true;
 }
 
-// ========================================
-// 2. SIDEBAR & SECTION NAVIGATION
-// ========================================
-
 function showAdminSection(sectionName, buttonEl) {
-  // Hide all sections
+
   document.querySelectorAll('.admin-section').forEach(sec => sec.classList.add('hidden'));
 
-  // Show target section
   const targetSec = document.getElementById(`sec-${sectionName}`);
   if (targetSec) targetSec.classList.remove('hidden');
 
-  // Update sidebar active buttons
   document.querySelectorAll('.sidebar-item').forEach(btn => btn.classList.remove('active'));
-  
+
   if (buttonEl) {
     buttonEl.classList.add('active');
   } else {
@@ -105,7 +88,6 @@ function showAdminSection(sectionName, buttonEl) {
     if (matchingBtn) matchingBtn.classList.add('active');
   }
 
-  // Update Topbar Title (aligned with Flutter AdminPage titles)
   const titles = {
     dashboard: 'Dashboard Admin',
     products: 'Manajemen Produk',
@@ -116,14 +98,12 @@ function showAdminSection(sectionName, buttonEl) {
   const titleEl = document.getElementById('topbar-title');
   if (titleEl) titleEl.textContent = titles[sectionName] || 'Admin Panel';
 
-  // Trigger section data refreshes
   if (sectionName === 'dashboard') renderDashboardOverview();
   if (sectionName === 'products') renderAdminProductsTable();
   if (sectionName === 'orders') renderAdminOrdersTable();
   if (sectionName === 'users') renderAdminUsersTable();
   if (sectionName === 'reports') renderReportsSection();
 
-  // Close mobile sidebar if open
   const sidebar = document.getElementById('admin-sidebar');
   if (sidebar && window.innerWidth <= 900) {
     sidebar.classList.remove('open');
@@ -141,7 +121,6 @@ function toggleSidebar() {
   }
 }
 
-// Logout Modal Handlers
 function openLogoutModal() {
   const modal = document.getElementById('logout-modal');
   if (modal) modal.classList.remove('hidden');
@@ -163,10 +142,6 @@ function confirmLogoutAdmin() {
   window.location.href = 'index.html';
 }
 
-// ========================================
-// 3. DASHBOARD OVERVIEW (Flutter DashboardTab)
-// ========================================
-
 function renderDashboardOverview() {
   const orders = getAdminOrders();
   const products = getAdminProducts();
@@ -175,26 +150,22 @@ function renderDashboardOverview() {
   const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
   const endOfToday = startOfToday + 86400000;
 
-  // 1. Total order hari ini
   const ordersTodayCount = orders.filter(o => {
     const t = new Date(o.date).getTime();
     return t >= startOfToday && t <= endOfToday;
   }).length;
 
-  // 2. Total pendapatan (dari order yang tidak dibatalkan)
   const totalRev = orders.reduce((sum, o) => {
     const isCancelled = o.status === 'cancelled' || o.status === 'dibatalkan';
     return isCancelled ? sum : sum + (Number(o.total) || 0);
   }, 0);
 
-  // 3. Pesanan Perlu Ditangani (status pending atau diproses)
   const needActionOrders = orders.filter(o => {
     const s = (o.status || '').toLowerCase();
     return s === 'pending' || s === 'diproses' || s === 'processing';
   });
   const needActionCount = needActionOrders.length;
 
-  // 4. Produk Terlaris (akumulasi qty dari pesanan tidak dibatalkan)
   const prodQuantities = {};
   orders.forEach(o => {
     const isCancelled = o.status === 'cancelled' || o.status === 'dibatalkan';
@@ -218,12 +189,10 @@ function renderDashboardOverview() {
     }
   });
 
-  // Jika belum ada order, tampilkan state kosong
   if (topProductQty === 0) {
     topProductName = 'Belum ada data';
   }
 
-  // Update Summary DOM Cards
   const ordTodayEl = document.getElementById('dash-orders-today');
   const revEl = document.getElementById('dash-total-revenue');
   const pendOrdEl = document.getElementById('dash-pending-orders');
@@ -236,7 +205,6 @@ function renderDashboardOverview() {
   if (topProdEl) topProdEl.textContent = topProductName;
   if (topProdQtyEl) topProdQtyEl.textContent = topProductQty > 0 ? `${topProductQty} porsi terjual` : 'Belum ada transaksi';
 
-  // Quick Table 1: Order Terbaru (Recent Orders - top 4)
   const recentOrdersTbody = document.getElementById('dash-recent-orders-tbody');
   if (recentOrdersTbody) {
     const sortedOrders = [...orders].sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -261,7 +229,6 @@ function renderDashboardOverview() {
     }
   }
 
-  // Quick Table 2: Stok Produk Menipis (stok < 15)
   const dashLowStockTbody = document.getElementById('dash-low-stock-tbody');
   if (dashLowStockTbody) {
     const lowStock = [...products]
@@ -290,17 +257,13 @@ function renderDashboardOverview() {
 
 }
 
-// ========================================
-// 4. PRODUCT MANAGEMENT (CRUD - ProductService)
-// ========================================
-
 function getAdminProducts() {
-  // Ambil langsung dari ems_products yang sama dengan page customer
+
   let stored = JSON.parse(localStorage.getItem('ems_products') || 'null');
   if (stored && Array.isArray(stored) && stored.length > 0) {
     return stored;
   }
-  // Sinkronkan dari PRODUCTS global (dari js/app.js)
+
   if (typeof PRODUCTS !== 'undefined' && PRODUCTS.length) {
     const synced = PRODUCTS.map(p => ({ ...p, active: p.active !== false }));
     localStorage.setItem('ems_products', JSON.stringify(synced));
@@ -332,8 +295,8 @@ function renderAdminProductsTable() {
     list = list.filter(p => (p.category || '').toLowerCase() === cat.toLowerCase());
   }
   if (query) {
-    list = list.filter(p => 
-      (p.name || '').toLowerCase().includes(query) || 
+    list = list.filter(p =>
+      (p.name || '').toLowerCase().includes(query) ||
       (p.description || '').toLowerCase().includes(query)
     );
   }
@@ -539,7 +502,7 @@ function handleProductFormSubmit(event) {
   let products = getAdminProducts();
 
   if (idVal) {
-    // Edit existing product
+
     const idx = products.findIndex(p => p.id === parseInt(idVal));
     if (idx !== -1) {
       products[idx] = {
@@ -555,7 +518,7 @@ function handleProductFormSubmit(event) {
       if (typeof showToast === 'function') showToast('Produk berhasil diperbarui! ✨', 'success');
     }
   } else {
-    // Add new product
+
     const newId = products.length ? Math.max(...products.map(p => p.id)) + 1 : 1;
     const newProduct = {
       id: newId,
@@ -589,10 +552,6 @@ function deleteProduct(productId) {
     renderDashboardOverview();
   }
 }
-
-// ========================================
-// 5. ORDER MANAGEMENT (Flutter OrderManagementTab)
-// ========================================
 
 function normalizeOrderStatus(status) {
   const s = (status || 'pending').toLowerCase();
@@ -642,7 +601,6 @@ function renderAdminOrdersTable() {
   const orders = getAdminOrders();
   let list = [...orders].sort((a, b) => new Date(b.date) - new Date(a.date));
 
-  // Filter status tab
   if (currentOrderFilter !== 'all') {
     list = list.filter(o => {
       const st = normalizeOrderStatus(o.status).key;
@@ -650,7 +608,6 @@ function renderAdminOrdersTable() {
     });
   }
 
-  // Filter search query
   if (query) {
     list = list.filter(o => {
       const idStr = String(o.id).toLowerCase();
@@ -672,13 +629,12 @@ function renderAdminOrdersTable() {
   tbody.innerHTML = list.map(o => {
     const displayId = formatDisplayOrderId(o.id, o.date);
     const isPickup = o.deliveryMethod === 'pickup';
-    const deliveryBadge = isPickup 
+    const deliveryBadge = isPickup
       ? `<span class="badge-pickup">🏪 Pick Up</span><br><small style="color:#6b7280;">${o.pickupDate || o.pickup?.date || 'Hari ini'} ${o.pickupTime || o.pickup?.time || '10:00'}</small>`
       : `<span class="badge-delivery">🚚 Kurir</span><br><small style="color:#6b7280;">${o.address?.city || o.address?.detail || 'Surabaya'}</small>`;
 
     const st = normalizeOrderStatus(o.status);
 
-    // Items list
     const itemsText = (o.items || []).map(it => {
       const prodId = it.id || it.productId;
       const p = products.find(prod => prod.id === prodId);
@@ -686,7 +642,6 @@ function renderAdminOrdersTable() {
       return `${name} (x${it.qty || it.quantity || 1})`;
     }).join(', ') || '-';
 
-    // Proof cell
     const proofImgUrl = o.proofUrl || o.strukBase64;
     let proofCell = '';
     if (proofImgUrl) {
@@ -807,12 +762,8 @@ function approveProofFromModal() {
   if (typeof showToast === 'function') showToast('Bukti pembayaran disetujui! Pesanan sedang diproses. ✅', 'success');
 }
 
-// ========================================
-// 6. USER MANAGEMENT (Flutter UserManagementTab)
-// ========================================
-
 function getAdminUsers() {
-  // Akun Admin bawaan (tidak perlu registrasi lagi)
+
   const defaultAdmin = {
     id: 'admin-1',
     name: 'Admin Utama',
@@ -824,17 +775,14 @@ function getAdminUsers() {
 
   let stored = JSON.parse(localStorage.getItem('ems_users') || '[]');
 
-  // Hapus akun dummy/template lama jika ada
   const dummyEmails = ['budi.santoso@gmail.com', 'siti.aminah@gmail.com', 'rudi.h@yahoo.com', 'jane@example.com', 'bob@example.com', 'Tes123@'];
   stored = stored.filter(u => !dummyEmails.includes(u.email));
 
-  // Hanya ada 2 role: 'admin' dan 'customer' (pengguna)
   stored = stored.map(u => ({
     ...u,
     role: (u.role === 'admin' || u.email === 'admin123') ? 'admin' : 'customer'
   }));
 
-  // Pastikan akun Admin Utama selalu ada di posisi teratas
   const hasAdmin = stored.some(u => u.role === 'admin' || u.email === 'admin123');
   const result = hasAdmin ? stored : [defaultAdmin, ...stored];
 
@@ -880,16 +828,13 @@ function renderAdminUsersTable() {
     const isAct = u.active !== false;
     const isAdmin = u.role === 'admin';
 
-    // Hanya 2 Role: Admin dan Pengguna
-    const roleBadge = isAdmin 
+    const roleBadge = isAdmin
       ? '<span class="badge-status badge-ready">🛡️ Admin</span>'
       : '<span class="badge-status badge-processing">👤 Pengguna</span>';
 
-    // Cari index asli di array users
     const realIdx = users.findIndex(us => us.email === u.email);
 
-    // Status toggle (Admin selalu aktif dan tidak dapat diblokir)
-    const statusCol = isAdmin 
+    const statusCol = isAdmin
       ? '<span class="user-status-text user-status-active">Aktif</span>'
       : `
         <div class="user-toggle-wrapper">
@@ -938,15 +883,10 @@ function toggleUserStatus(index) {
   renderAdminUsersTable();
 }
 
-// ========================================
-// 7. REPORTS & CHART (Flutter ReportsTab & FlChart)
-// ========================================
-
 function renderReportsSection() {
   const orders = getAdminOrders();
   const products = getAdminProducts();
 
-  // Completed / valid orders
   const validOrders = orders.filter(o => o.status !== 'cancelled' && o.status !== 'dibatalkan');
   const completedOrders = orders.filter(o => {
     const s = (o.status || '').toLowerCase();
@@ -959,7 +899,6 @@ function renderReportsSection() {
   document.getElementById('rep-total-revenue').textContent = formatRp(totalRevenue);
   document.getElementById('rep-done-orders').textContent = `${doneOrdersCount} Transaksi`;
 
-  // Top Product
   const prodQuantities = {};
   validOrders.forEach(o => {
     if (Array.isArray(o.items)) {
@@ -987,10 +926,8 @@ function renderReportsSection() {
   if (repTopProdEl) repTopProdEl.textContent = topProdName !== '-' ? topProdName : 'Belum ada data';
   if (repTopProdSubEl) repTopProdSubEl.textContent = maxQty > 0 ? `${maxQty} porsi terjual` : 'Belum ada transaksi';
 
-  // Render Interactive Weekly Sales Chart (LineChart)
   renderWeeklySalesChart(validOrders);
 
-  // Render Table Ringkasan Penjualan Tiap Produk
   const repTbody = document.getElementById('rep-products-tbody');
   if (repTbody) {
     repTbody.innerHTML = products.map(p => {
@@ -1005,7 +942,6 @@ function renderReportsSection() {
         }
       });
 
-      // Hanya tampilkan jumlah terjual dari order real customer
       const displaySold = totalQty;
       const subtotal = displaySold * p.price;
 
@@ -1027,7 +963,6 @@ function renderReportsSection() {
   }
 }
 
-// Draw dynamic weekly SVG line chart matching Flutter FlChart
 function renderWeeklySalesChart(validOrders) {
   const chartWrapper = document.getElementById('sales-chart-wrapper');
   if (!chartWrapper) return;
@@ -1054,7 +989,6 @@ function renderWeeklySalesChart(validOrders) {
     daysLabels.push(label);
   }
 
-  // Gunakan data penjualan real 7 hari terakhir dari orderan customer
   const chartValues = daysData;
 
   const maxVal = Math.max(...chartValues, 50000);
@@ -1077,7 +1011,6 @@ function renderWeeklySalesChart(validOrders) {
     return { x, y, val, label: daysLabels[idx] };
   });
 
-  // Build smooth bezier path
   let pathD = `M ${points[0].x} ${points[0].y}`;
   for (let i = 0; i < points.length - 1; i++) {
     const p0 = points[i];
@@ -1086,10 +1019,8 @@ function renderWeeklySalesChart(validOrders) {
     pathD += ` C ${cx} ${p0.y}, ${cx} ${p1.y}, ${p1.x} ${p1.y}`;
   }
 
-  // Area path for gradient fill
   const areaD = `${pathD} L ${points[points.length - 1].x} ${paddingTop + plotHeight} L ${points[0].x} ${paddingTop + plotHeight} Z`;
 
-  // Draw grid lines
   const gridLines = [0, 0.5, 1].map(pct => {
     const y = paddingTop + plotHeight * (1 - pct);
     const valText = formatRp(minVal + range * pct);
@@ -1099,7 +1030,6 @@ function renderWeeklySalesChart(validOrders) {
     `;
   }).join('');
 
-  // Draw data dots & labels
   const dotsAndLabels = points.map(pt => `
     <circle cx="${pt.x}" cy="${pt.y}" r="5" fill="#2d5a27" stroke="#ffffff" stroke-width="2.5" class="chart-point" />
     <text x="${pt.x}" y="${pt.y - 10}" fill="#2d5a27" font-size="11" font-weight="700" text-anchor="middle">${formatRp(pt.val)}</text>
@@ -1123,7 +1053,6 @@ function renderWeeklySalesChart(validOrders) {
   `;
 }
 
-// Export CSV report (matching Flutter ReportsTab _exportLaporan)
 function exportAdminSalesReport() {
   const orders = getAdminOrders();
   const rows = [
@@ -1155,10 +1084,6 @@ function exportAdminSalesReport() {
     showToast('Laporan penjualan (CSV) berhasil diunduh! 📥', 'success');
   }
 }
-
-// ========================================
-// 8. INITIALIZATION
-// ========================================
 
 document.addEventListener('DOMContentLoaded', () => {
   if (checkAdminAccess()) {

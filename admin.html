@@ -11,7 +11,6 @@
 </head>
 <body class="admin-body">
 
-  <!-- Admin Sidebar -->
   <aside class="admin-sidebar" id="admin-sidebar">
     <div class="sidebar-brand">
       <div class="sidebar-brand-text">
@@ -42,8 +41,6 @@
         <span>Manajemen Order</span>
       </button>
 
-
-
       <button type="button" class="sidebar-item" data-section="users" onclick="showAdminSection('users', this)">
         <svg class="nav-svg-icon" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
           <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
@@ -60,22 +57,19 @@
 
       <div class="sidebar-divider"></div>
 
-      <!-- Tombol Keluar: teks warna merah tanpa icon -->
       <button type="button" class="sidebar-item logout-item" onclick="openLogoutModal()">
         <span>Keluar Admin</span>
       </button>
     </nav>
   </aside>
 
-  <!-- Admin Main Content -->
   <div class="admin-main" id="admin-main">
-    
-    <!-- Topbar Header -->
+
     <header class="admin-topbar">
       <button class="sidebar-toggle" onclick="toggleSidebar()" title="Toggle Sidebar">
         <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
       </button>
-      
+
       <div class="topbar-title-section">
         <h1 class="topbar-title" id="topbar-title">Dashboard Admin</h1>
         <span class="topbar-sub">Sistem Kelola UMKM Elok Mekar Sari</span>
@@ -92,9 +86,6 @@
       </div>
     </header>
 
-    <!-- CONTENT SECTIONS -->
-
-    <!-- 1. DASHBOARD OVERVIEW SECTION -->
     <section class="admin-section active" id="sec-dashboard">
       <div class="section-banner">
         <div>
@@ -103,9 +94,8 @@
         </div>
       </div>
 
-      <!-- 4 Summary Cards (from Flutter DashboardTab) -->
       <div class="admin-stats-grid">
-        <!-- 1. Total Order Hari Ini (Clickable to Orders) -->
+
         <div class="admin-stat-card card-green card-interactive" onclick="showAdminSection('orders', document.querySelector('[data-section=orders]'))" title="Klik untuk lihat Manajemen Order">
           <div class="stat-icon-wrapper">
             <img src="Icon/keranjang.png" alt="Keranjang" class="stat-icon-img">
@@ -117,7 +107,6 @@
           </div>
         </div>
 
-        <!-- 2. Total Pendapatan (Clickable to Orders) -->
         <div class="admin-stat-card card-blue card-interactive" onclick="showAdminSection('orders', document.querySelector('[data-section=orders]'))" title="Klik untuk lihat Manajemen Order">
           <div class="stat-icon-wrapper">
             <img src="Icon/dollar.png" alt="Dollar" class="stat-icon-img">
@@ -129,7 +118,6 @@
           </div>
         </div>
 
-        <!-- 3. Pesanan Perlu Ditangani -->
         <div class="admin-stat-card card-orange card-interactive" onclick="showAdminSection('orders', document.querySelector('[data-section=orders]'))" title="Klik untuk lihat Manajemen Order">
           <div class="stat-icon-wrapper">
             <img src="Icon/kalender.png" alt="Kalender" class="stat-icon-img">
@@ -141,7 +129,6 @@
           </div>
         </div>
 
-        <!-- 4. Produk Terlaris -->
         <div class="admin-stat-card card-teal">
           <div class="stat-icon-wrapper">
             <img src="Icon/bintang.png" alt="Bintang" class="stat-icon-img">
@@ -154,7 +141,6 @@
         </div>
       </div>
 
-      <!-- Quick Tables Section: Recent Orders & Low Stock -->
       <div class="dashboard-double-grid">
         <div class="admin-card">
           <div class="card-header-flex">
@@ -172,7 +158,7 @@
                 </tr>
               </thead>
               <tbody id="dash-recent-orders-tbody">
-                <!-- Filled by JS -->
+
               </tbody>
             </table>
           </div>
@@ -194,7 +180,7 @@
                 </tr>
               </thead>
               <tbody id="dash-low-stock-tbody">
-                <!-- Filled by JS -->
+
               </tbody>
             </table>
           </div>
@@ -203,7 +189,6 @@
 
     </section>
 
-    <!-- 2. PRODUCT MANAGEMENT SECTION -->
     <section class="admin-section hidden" id="sec-products">
       <div class="section-toolbar">
         <div>
@@ -250,14 +235,13 @@
               </tr>
             </thead>
             <tbody id="admin-products-table-tbody">
-              <!-- Rendered via JS -->
+
             </tbody>
           </table>
         </div>
       </div>
     </section>
 
-    <!-- 3. ORDER MANAGEMENT SECTION -->
     <section class="admin-section hidden" id="sec-orders">
       <div class="section-toolbar">
         <div>
@@ -266,7 +250,6 @@
         </div>
       </div>
 
-      <!-- Status Tabs (from Flutter OrderManagementTab) -->
       <div class="order-tabs-admin">
         <button type="button" class="tab-btn active" data-status="all" onclick="filterOrdersByStatus('all', this)">Semua Pesanan</button>
         <button type="button" class="tab-btn" data-status="pending" onclick="filterOrdersByStatus('pending', this)">Menunggu Pembayaran</button>
@@ -302,14 +285,13 @@
               </tr>
             </thead>
             <tbody id="admin-orders-table-tbody">
-              <!-- Rendered via JS -->
+
             </tbody>
           </table>
         </div>
       </div>
     </section>
 
-    <!-- 5. USERS MANAGEMENT SECTION -->
     <section class="admin-section hidden" id="sec-users">
       <div class="section-toolbar">
         <div>
@@ -339,14 +321,13 @@
               </tr>
             </thead>
             <tbody id="admin-users-table-tbody">
-              <!-- Rendered via JS -->
+
             </tbody>
           </table>
         </div>
       </div>
     </section>
 
-    <!-- 6. REPORTS SECTION -->
     <section class="admin-section hidden" id="sec-reports">
       <div class="section-toolbar">
         <div>
@@ -355,7 +336,6 @@
         </div>
       </div>
 
-      <!-- Sales Chart Card (from Flutter ReportsTab LineChart) -->
       <div class="admin-card report-chart-card">
         <div class="card-header-flex">
           <div>
@@ -364,13 +344,12 @@
           </div>
           <div class="chart-badge-tag">Statistik Realtime</div>
         </div>
-        
+
         <div class="chart-container" id="sales-chart-wrapper">
-          <!-- Dynamic SVG Chart rendered by JS -->
+
         </div>
       </div>
 
-      <!-- Summary Stats (Ringkasan Bulanan) -->
       <div class="admin-stats-grid" style="margin-top: 20px;">
         <div class="admin-stat-card card-green">
           <div class="stat-data">
@@ -395,7 +374,6 @@
         </div>
       </div>
 
-      <!-- Ringkasan Penjualan Tiap Produk -->
       <div class="admin-card" style="margin-top: 20px;">
         <h3>Ringkasan Penjualan Tiap Produk</h3>
         <div class="table-responsive">
@@ -410,7 +388,7 @@
               </tr>
             </thead>
             <tbody id="rep-products-tbody">
-              <!-- Rendered via JS -->
+
             </tbody>
           </table>
         </div>
@@ -419,7 +397,6 @@
 
   </div>
 
-  <!-- MODAL: ADD / EDIT PRODUCT -->
   <div class="modal-overlay hidden" id="product-modal">
     <div class="modal-dialog">
       <div class="modal-header">
@@ -508,7 +485,6 @@
     </div>
   </div>
 
-  <!-- MODAL: VIEW PROOF OF PAYMENT (STRUK) -->
   <div class="modal-overlay hidden" id="proof-modal" onclick="closeProofModalOnBackdrop(event)">
     <div class="modal-dialog modal-dialog-proof">
       <div class="modal-header">
@@ -520,7 +496,7 @@
           <img id="proof-img" src="" alt="Bukti Pembayaran">
         </div>
         <div class="proof-details" id="proof-details-text">
-          <!-- Filled by JS -->
+
         </div>
       </div>
       <div class="modal-footer">
@@ -530,7 +506,6 @@
     </div>
   </div>
 
-    <!-- MODAL: LOGOUT CONFIRMATION -->
   <div class="modal-overlay hidden" id="logout-modal" onclick="closeLogoutModalOnBackdrop(event)">
     <div class="modal-dialog modal-dialog-sm">
       <div class="modal-header">
@@ -547,10 +522,8 @@
     </div>
   </div>
 
-  <!-- Toast -->
   <div class="toast" id="toast"></div>
 
-  <!-- SCRIPTS -->
   <script src="js/app.js"></script>
   <script src="js/admin.js"></script>
 </body>

@@ -1,6 +1,4 @@
-// ========================================
-// CART.JS - Cart Management & Summary
-// ========================================
+
 
 function renderCart() {
   const cart = getCart();
@@ -14,7 +12,6 @@ function renderCart() {
 
   if (!itemsContainer) return;
 
-  // Calculate total item quantity & total amount
   let totalQty = 0;
   let totalAmount = 0;
 
@@ -70,7 +67,6 @@ function renderCart() {
     itemsContainer.appendChild(row);
   });
 
-  // Update Summary and Count
   if (cartCountEl) cartCountEl.textContent = totalQty;
   if (subtotalEl) subtotalEl.textContent = formatRupiah(totalAmount);
   if (totalPriceEl) totalPriceEl.textContent = formatRupiah(totalAmount);

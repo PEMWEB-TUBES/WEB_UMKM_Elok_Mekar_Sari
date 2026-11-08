@@ -1,4 +1,4 @@
-/* ========== ORDERS CSS ========== */
+
 
 .order-tabs {
   display: flex;
@@ -96,7 +96,6 @@
 }
 .btn-upload-proof:hover { background: #e67e00; }
 
-/* Status Section in header */
 .order-status-section { display: flex; align-items: center; gap: 8px; }
 .delivery-type-badge {
   display: inline-flex;
@@ -110,7 +109,6 @@
   color: #1565c0;
 }
 
-/* Order Timeline */
 .order-timeline {
   padding: 20px 0;
 }
@@ -156,11 +154,9 @@
 .timeline-desc { font-size: 0.82rem; color: var(--text-muted); }
 .timeline-time { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
 
-/* Order Modal */
 .order-modal-content { max-width: 640px; padding: 24px; }
 .order-modal-content .modal-title { padding: 0 0 16px; border-bottom: 1px solid var(--border); }
 
-/* Upload Proof Modal */
 .upload-modal-content { max-width: 480px; padding: 24px; }
 .upload-modal-note { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 16px; padding: 0 0 0 24px; }
 .upload-modal-actions { display: flex; gap: 12px; margin-top: 20px; }
