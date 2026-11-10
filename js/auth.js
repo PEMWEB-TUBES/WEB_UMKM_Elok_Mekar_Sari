@@ -199,18 +199,18 @@ function register(event) {
     registeredAt: new Date().toISOString()
   };
 
-  localStorage.setItem('ems_user', JSON.stringify(newUser));
-
   const users = JSON.parse(localStorage.getItem('ems_users') || '[]');
-  if (!users.some(u => u.email === email)) {
-    users.push(newUser);
-    localStorage.setItem('ems_users', JSON.stringify(users));
+  if (users.some(u => u.email.toLowerCase() === email.toLowerCase())) {
+    showToast('Email sudah terdaftar. Silakan login.', 'error');
+    return;
   }
+  users.push(newUser);
+  localStorage.setItem('ems_users', JSON.stringify(users));
 
-  showToast('Pendaftaran akun berhasil!', 'success');
+  showToast('Pendaftaran berhasil! Silakan login dengan akun Anda.', 'success');
   setTimeout(() => {
-    window.location.href = isAdmin ? 'admin.html' : 'home.html';
-  }, 1000);
+    window.location.href = 'index.html?tab=login';
+  }, 1200);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -222,5 +222,10 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   if (tabRegister) {
     tabRegister.addEventListener('click', () => showTab('register'));
+  }
+
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('tab') === 'login') {
+    showTab('login');
   }
 });

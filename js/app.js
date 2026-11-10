@@ -1,5 +1,3 @@
-
-
 const BASE_IMG = 'images/';
 
 let PRODUCTS = [
@@ -134,12 +132,17 @@ function logout() {
   }
 }
 
+function getCartKey() {
+  const u = getCurrentUser();
+  return u && u.email ? 'ems_cart_' + u.email : 'ems_cart_guest';
+}
+
 function getCart() {
-  return JSON.parse(localStorage.getItem('ems_cart') || '[]');
+  return JSON.parse(localStorage.getItem(getCartKey()) || '[]');
 }
 
 function saveCart(cart) {
-  localStorage.setItem('ems_cart', JSON.stringify(cart));
+  localStorage.setItem(getCartKey(), JSON.stringify(cart));
   updateCartBadge();
 }
 
@@ -147,7 +150,6 @@ function addToCart(productId, qty = 1) {
   const cart = getCart();
   const product = PRODUCTS.find(p => p.id === productId);
   if (!product) return;
-
   const existing = cart.find(item => item.id === productId);
   if (existing) {
     existing.qty = Math.min(existing.qty + qty, product.stock);
@@ -177,7 +179,7 @@ function getCartTotal() {
 }
 
 function formatRupiah(amount) {
-  return 'Rp ' + amount.toLocaleString('id-ID');
+  return 'Rp ' + Number(amount || 0).toLocaleString('id-ID');
 }
 
 function formatDate(dateStr) {
@@ -203,27 +205,22 @@ function showToast(message, type = 'default') {
 function initNavbar() {
   const user = getCurrentUser();
   if (!user) return;
-
   const navAvatar = document.getElementById('nav-avatar');
   const dropdownAvatar = document.getElementById('dropdown-avatar');
   const dropdownName = document.getElementById('dropdown-name');
   const dropdownEmail = document.getElementById('dropdown-email');
-
   const initial = (user.name || 'U')[0].toUpperCase();
   if (navAvatar) navAvatar.textContent = initial;
   if (dropdownAvatar) dropdownAvatar.textContent = initial;
   if (dropdownName) dropdownName.textContent = user.name || 'Pengguna';
   if (dropdownEmail) dropdownEmail.textContent = user.email || '';
-
   if (user.role === 'admin') {
     const badge = document.createElement('span');
     badge.style.cssText = 'background:#2d7a2d;color:white;font-size:0.7rem;padding:2px 8px;border-radius:999px;font-weight:700;margin-left:6px;';
     badge.textContent = 'ADMIN';
-    if (navAvatar) navAvatar.parentElement.appendChild(badge);
+    if (navAvatar && navAvatar.parentElement) navAvatar.parentElement.appendChild(badge);
   }
-
   updateCartBadge();
-
   window.addEventListener('scroll', () => {
     const navbar = document.getElementById('navbar');
     if (navbar) navbar.classList.toggle('scrolled', window.scrollY > 20);
@@ -248,7 +245,6 @@ function togglePassword(inputId, btn) {
   if (!input) return;
   const isCurrentlyPassword = (input.type === 'password');
   input.type = isCurrentlyPassword ? 'text' : 'password';
-
   const button = btn || (typeof event !== 'undefined' && event ? event.currentTarget : null) || (input.parentElement ? input.parentElement.querySelector('.password-toggle') : null);
   if (button) {
     const img = button.querySelector('img') || (button.tagName === 'IMG' ? button : null);
@@ -265,17 +261,9 @@ function getOrders() {
       id: 'EMS-001',
       userId: 'demo@user.com',
       date: '2026-10-25T15:39:00.000Z',
-      items: [
-        { id: 7, qty: 2 }
-      ],
+      items: [{ id: 7, qty: 2 }],
       deliveryMethod: 'delivery',
-      address: {
-        recipient: 'Budi Santoso',
-        phone: '081234567890',
-        detail: 'Jl. Merdeka No. 5, Surabaya',
-        city: 'Surabaya',
-        zip: '60111'
-      },
+      address: { recipient: 'Budi Santoso', phone: '081234567890', detail: 'Jl. Merdeka No. 5, Surabaya', city: 'Surabaya', zip: '60111' },
       paymentMethod: 'transfer',
       paymentDetail: 'BRI',
       status: 'processing',
@@ -286,21 +274,10 @@ function getOrders() {
       id: 'EMS-002',
       userId: 'demo@user.com',
       date: '2026-10-18T15:39:00.000Z',
-      items: [
-        { id: 3, qty: 1 }
-      ],
+      items: [{ id: 3, qty: 1 }],
       deliveryMethod: 'pickup',
-      pickup: {
-        date: '2026-10-18',
-        time: '15:39'
-      },
-      address: {
-        recipient: 'Budi Santoso',
-        phone: '081234567890',
-        detail: 'Jl. Merdeka No. 5, Surabaya',
-        city: 'Surabaya',
-        zip: '60111'
-      },
+      pickup: { date: '2026-10-18', time: '15:39' },
+      address: { recipient: 'Budi Santoso', phone: '081234567890', detail: 'Jl. Merdeka No. 5, Surabaya', city: 'Surabaya', zip: '60111' },
       paymentMethod: 'ewallet',
       paymentDetail: 'GoPay',
       status: 'done',
@@ -311,17 +288,9 @@ function getOrders() {
       id: 'EMS-003',
       userId: 'demo@user.com',
       date: '2026-10-10T09:15:00.000Z',
-      items: [
-        { id: 4, qty: 2 }
-      ],
+      items: [{ id: 4, qty: 2 }],
       deliveryMethod: 'delivery',
-      address: {
-        recipient: 'Budi Santoso',
-        phone: '081234567890',
-        detail: 'Jl. Merdeka No. 5, Surabaya',
-        city: 'Surabaya',
-        zip: '60111'
-      },
+      address: { recipient: 'Budi Santoso', phone: '081234567890', detail: 'Jl. Merdeka No. 5, Surabaya', city: 'Surabaya', zip: '60111' },
       paymentMethod: 'transfer',
       paymentDetail: 'BRI',
       status: 'cancelled',

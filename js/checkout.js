@@ -1,5 +1,3 @@
-
-
 let currentDeliveryMethod = 'delivery';
 let currentPaymentMethod = 'transfer';
 let selectedBankName = 'BNI';
@@ -12,7 +10,6 @@ const BANK_ACCOUNTS = {
 
 function initCheckout() {
   const cart = getCart();
-
   if (!cart || cart.length === 0) {
     showToast('Keranjang Anda kosong! Silakan pilih produk terlebih dahulu.', 'error');
     setTimeout(() => {
@@ -20,7 +17,6 @@ function initCheckout() {
     }, 1500);
     return;
   }
-
   const user = getCurrentUser();
   if (user) {
     const nameInput = document.getElementById('recipient-name');
@@ -28,7 +24,6 @@ function initCheckout() {
     if (nameInput && !nameInput.value) nameInput.value = user.name || '';
     if (phoneInput && !phoneInput.value) phoneInput.value = user.phone || '';
   }
-
   const addrInput = document.getElementById('address');
   const cityInput = document.getElementById('city');
   const zipInput = document.getElementById('zip');
@@ -42,7 +37,6 @@ function initCheckout() {
     pickupDateInput.min = today;
     pickupDateInput.value = today;
   }
-
   renderCheckoutSummary();
   selectDelivery('delivery');
   selectPayment('transfer');
@@ -54,43 +48,34 @@ function renderCheckoutSummary() {
   const subtotalEl = document.getElementById('checkout-subtotal');
   const shippingEl = document.getElementById('checkout-shipping');
   const totalEl = document.getElementById('checkout-total');
-
   if (!summaryContainer) return;
 
   summaryContainer.innerHTML = '';
   let subtotal = 0;
-
   cart.forEach(item => {
     const product = PRODUCTS.find(p => p.id === item.id);
     if (!product) return;
-
     const itemSubtotal = product.price * item.qty;
     subtotal += itemSubtotal;
 
     const row = document.createElement('div');
     row.className = 'summary-item';
-    row.style.display = 'flex';
-    row.style.alignItems = 'center';
-    row.style.justifyContent = 'space-between';
-    row.style.marginBottom = '10px';
-    row.style.fontSize = '0.9rem';
-
+    row.style.cssText = 'display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;font-size:0.9rem;';
     row.innerHTML = `
-      <div style="display:flex; align-items:center; gap:10px;">
-        <img src="${product.image}" alt="${product.name}" style="width:40px; height:40px; object-fit:cover; border-radius:6px;">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <img src="${product.image}" alt="${product.name}" style="width:40px;height:40px;object-fit:cover;border-radius:6px;">
         <div>
-          <div style="font-weight:600; color:#1a1a2e;">${product.name}</div>
-          <div style="font-size:0.8rem; color:#6a6a8a;">${item.qty} × ${formatRupiah(product.price)}</div>
+          <div style="font-weight:600;color:#1a1a2e;">${product.name}</div>
+          <div style="font-size:0.8rem;color:#6a6a8a;">${item.qty} × ${formatRupiah(product.price)}</div>
         </div>
       </div>
-      <div style="font-weight:600; color:#1a1a2e;">${formatRupiah(itemSubtotal)}</div>
+      <div style="font-weight:600;color:#1a1a2e;">${formatRupiah(itemSubtotal)}</div>
     `;
     summaryContainer.appendChild(row);
   });
 
   const shippingCost = (currentDeliveryMethod === 'delivery') ? 10000 : 0;
   const grandTotal = subtotal + shippingCost;
-
   if (subtotalEl) subtotalEl.textContent = formatRupiah(subtotal);
   if (shippingEl) shippingEl.textContent = (shippingCost === 0) ? 'Gratis' : formatRupiah(shippingCost);
   if (totalEl) totalEl.textContent = formatRupiah(grandTotal);
@@ -98,7 +83,6 @@ function renderCheckoutSummary() {
 
 function selectDelivery(method) {
   currentDeliveryMethod = method;
-
   const deliveryRadio = document.getElementById('delivery-radio');
   const pickupRadio = document.getElementById('pickup-radio');
   const cardDelivery = document.getElementById('delivery-card-delivery');
@@ -119,13 +103,11 @@ function selectDelivery(method) {
     if (addressForm) addressForm.classList.add('hidden');
     if (pickupInfo) pickupInfo.classList.remove('hidden');
   }
-
   renderCheckoutSummary();
 }
 
 function selectPayment(method) {
   currentPaymentMethod = method;
-
   const transferRadio = document.getElementById('transfer-radio');
   const ewalletRadio = document.getElementById('ewallet-radio');
   const cardTransfer = document.getElementById('payment-card-transfer');
@@ -152,7 +134,6 @@ function selectBank(bank, btn) {
   selectedBankName = bank;
   document.querySelectorAll('.bank-btn').forEach(b => b.classList.remove('active'));
   if (btn) btn.classList.add('active');
-
   const bankNameEl = document.getElementById('selected-bank');
   const accountNumEl = document.getElementById('account-number');
   if (bankNameEl) bankNameEl.textContent = bank;
@@ -163,7 +144,6 @@ function selectEwallet(wallet, btn) {
   selectedEwalletName = wallet;
   document.querySelectorAll('.ewallet-btn').forEach(b => b.classList.remove('active'));
   if (btn) btn.classList.add('active');
-
   const walletNameEl = document.getElementById('selected-ewallet');
   if (walletNameEl) walletNameEl.textContent = wallet;
 }
@@ -184,13 +164,11 @@ function goToStep1() {
 }
 
 function goToStep2() {
-
   if (currentDeliveryMethod === 'delivery') {
     const name = document.getElementById('recipient-name')?.value.trim();
     const phone = document.getElementById('recipient-phone')?.value.trim();
     const address = document.getElementById('address')?.value.trim();
     const city = document.getElementById('city')?.value.trim();
-
     if (!name || !phone || !address || !city) {
       showToast('Harap lengkapi semua kolom alamat pengiriman.', 'error');
       return;
@@ -198,18 +176,15 @@ function goToStep2() {
   } else {
     const pickupDate = document.getElementById('pickup-date')?.value;
     const pickupTime = document.getElementById('pickup-time')?.value;
-
     if (!pickupDate || !pickupTime) {
       showToast('Harap pilih tanggal dan jam pick up.', 'error');
       return;
     }
   }
-
   showStep(2);
 }
 
 function goToStep3() {
-
   renderConfirmationStep();
   showStep(3);
 }
@@ -222,7 +197,6 @@ function showStep(stepNum) {
   for (let i = 1; i <= 3; i++) {
     const stepEl = document.getElementById('step-' + i + '-indicator');
     if (!stepEl) continue;
-
     stepEl.classList.remove('active', 'done');
     if (i < stepNum) {
       stepEl.classList.add('done');
@@ -230,7 +204,6 @@ function showStep(stepNum) {
       stepEl.classList.add('active');
     }
   }
-
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -243,23 +216,14 @@ function renderConfirmationStep() {
 
   if (itemsContainer) {
     itemsContainer.innerHTML = '';
-    let subtotal = 0;
     cart.forEach(item => {
       const product = PRODUCTS.find(p => p.id === item.id);
       if (!product) return;
       const itemSubtotal = product.price * item.qty;
-      subtotal += itemSubtotal;
-
       const div = document.createElement('div');
-      div.style.display = 'flex';
-      div.style.justifyContent = 'space-between';
-      div.style.alignItems = 'center';
-      div.style.padding = '8px 0';
-      div.style.borderBottom = '1px solid #f0f0f0';
+      div.style.cssText = 'display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #f0f0f0;';
       div.innerHTML = `
-        <div>
-          <strong>${product.name}</strong> <span style="color:#666;">× ${item.qty}</span>
-        </div>
+        <div><strong>${product.name}</strong> <span style="color:#666;">× ${item.qty}</span></div>
         <div>${formatRupiah(itemSubtotal)}</div>
       `;
       itemsContainer.appendChild(div);
@@ -273,7 +237,6 @@ function renderConfirmationStep() {
       const addr = document.getElementById('address')?.value.trim();
       const city = document.getElementById('city')?.value.trim();
       const zip = document.getElementById('zip')?.value.trim();
-
       shippingContainer.innerHTML = `
         <p><strong>Metode:</strong> Pengiriman ke Alamat (Ongkir: Rp 10.000)</p>
         <p><strong>Penerima:</strong> ${name} (${phone})</p>
@@ -282,7 +245,6 @@ function renderConfirmationStep() {
     } else {
       const date = document.getElementById('pickup-date')?.value;
       const time = document.getElementById('pickup-time')?.value;
-
       shippingContainer.innerHTML = `
         <p><strong>Metode:</strong> Pick Up di Tempat (Gratis Ongkir)</p>
         <p><strong>Lokasi:</strong> RW 08, Kelurahan Semolowaru, Kecamatan Sukolilo, Kota Surabaya</p>
@@ -341,7 +303,6 @@ function handleDrop(event) {
     const file = event.dataTransfer.files[0];
     const fileInput = document.getElementById('proof-file');
     if (fileInput) {
-
       const dataTransfer = new DataTransfer();
       dataTransfer.items.add(file);
       fileInput.files = dataTransfer.files;
@@ -360,7 +321,6 @@ function placeOrder() {
   const subtotal = getCartTotal();
   const shippingCost = (currentDeliveryMethod === 'delivery') ? 10000 : 0;
   const grandTotal = subtotal + shippingCost;
-
   const orderId = 'EMS-' + Date.now().toString().slice(-6);
 
   let deliveryDetails = {};
@@ -382,17 +342,19 @@ function placeOrder() {
   }
 
   const user = getCurrentUser();
-  const userEmail = user ? user.email : 'demo@user.com';
+  if (!user) {
+    showToast('Silakan login terlebih dahulu.', 'error');
+    setTimeout(() => { window.location.href = 'index.html'; }, 1000);
+    return;
+  }
+  const userEmail = user.email;
 
   const newOrder = {
     id: orderId,
     userId: userEmail,
     date: new Date().toISOString(),
     status: uploadedProofBase64 ? 'processing' : 'pending',
-    items: cart.map(item => ({
-      id: item.id,
-      qty: item.qty
-    })),
+    items: cart.map(item => ({ id: item.id, qty: item.qty })),
     subtotal: subtotal,
     shippingCost: shippingCost,
     total: grandTotal,
@@ -417,11 +379,8 @@ function placeOrder() {
   const orders = getOrders();
   orders.unshift(newOrder);
   saveOrders(orders);
-
   saveCart([]);
-
   showToast('Pesanan berhasil dibuat! Mengalihkan ke riwayat pesanan...', 'success');
-
   setTimeout(() => {
     window.location.href = 'orders.html';
   }, 1200);

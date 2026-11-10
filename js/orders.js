@@ -6,8 +6,7 @@ function loadOrders() {
   const orders = getOrders();
   const user = getCurrentUser();
   if (!user || user.role === 'admin') return orders;
-  const userOrders = orders.filter(o => !o.userId || o.userId === user.email || o.userId === 'demo@user.com');
-  return userOrders.length > 0 ? userOrders : orders;
+  return orders.filter(o => o.userId && o.userId === user.email);
 }
 
 function renderOrders() {
@@ -83,15 +82,15 @@ function renderOrders() {
       </div>
       <div class="order-card-items">
         ${order.items.map(i => {
-          const prod = PRODUCTS.find(p => p.id === i.id);
-          if (!prod) return '';
-          return `<div class="order-item-row">
+      const prod = PRODUCTS.find(p => p.id === i.id);
+      if (!prod) return '';
+      return `<div class="order-item-row">
             <img src="${prod.image}" alt="${prod.name}" class="order-item-img" loading="lazy" />
             <div class="order-item-name">${prod.name}</div>
             <div class="order-item-qty">x${i.qty}</div>
             <div class="order-item-price">${formatRupiah(prod.price * i.qty)}</div>
           </div>`;
-        }).join('')}
+    }).join('')}
       </div>
       ${shippedMapBlock}
       <div class="order-card-footer">
