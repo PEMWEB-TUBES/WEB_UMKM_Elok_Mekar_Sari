@@ -155,10 +155,27 @@ function renderDashboardOverview() {
     return t >= startOfToday && t <= endOfToday;
   }).length;
 
-  const totalRev = orders.reduce((sum, o) => {
+  let totalRev = 0;
+  let totalCogs = 0;
+
+  orders.forEach(o => {
     const isCancelled = o.status === 'cancelled' || o.status === 'dibatalkan';
-    return isCancelled ? sum : sum + (Number(o.total) || 0);
-  }, 0);
+    if (!isCancelled) {
+      totalRev += (Number(o.total || o.totalPrice) || 0);
+      if (Array.isArray(o.items)) {
+        o.items.forEach(it => {
+          const prodId = it.id || it.productId;
+          const prod = products.find(p => p.id === prodId);
+          const qty = Number(it.qty || it.quantity) || 1;
+          const cogs = getProductCogs(prod);
+          totalCogs += cogs * qty;
+        });
+      }
+    }
+  });
+
+  const totalProfit = totalRev - totalCogs;
+  const marginPercent = totalRev > 0 ? ((totalProfit / totalRev) * 100).toFixed(1) : '0';
 
   const needActionOrders = orders.filter(o => {
     const s = (o.status || '').toLowerCase();
@@ -195,12 +212,16 @@ function renderDashboardOverview() {
 
   const ordTodayEl = document.getElementById('dash-orders-today');
   const revEl = document.getElementById('dash-total-revenue');
+  const profitEl = document.getElementById('dash-total-profit');
+  const profitMarginEl = document.getElementById('dash-profit-margin');
   const pendOrdEl = document.getElementById('dash-pending-orders');
   const topProdEl = document.getElementById('dash-top-product');
   const topProdQtyEl = document.getElementById('dash-top-product-qty');
 
   if (ordTodayEl) ordTodayEl.textContent = ordersTodayCount;
   if (revEl) revEl.textContent = formatRp(totalRev);
+  if (profitEl) profitEl.textContent = formatRp(totalProfit);
+  if (profitMarginEl) profitMarginEl.textContent = `Margin Keuntungan: ${marginPercent}%`;
   if (pendOrdEl) pendOrdEl.textContent = needActionCount;
   if (topProdEl) topProdEl.textContent = topProductName;
   if (topProdQtyEl) topProdQtyEl.textContent = topProductQty > 0 ? `${topProductQty} porsi terjual` : 'Belum ada transaksi';
@@ -515,7 +536,7 @@ function handleProductFormSubmit(event) {
         description: desc,
         image: finalImageUrl
       };
-      if (typeof showToast === 'function') showToast('Produk berhasil diperbarui! ✨', 'success');
+      if (typeof showToast === 'function') showToast('Produk berhasil diperbarui.', 'success');
     }
   } else {
 
@@ -533,7 +554,7 @@ function handleProductFormSubmit(event) {
       active: true
     };
     products.push(newProduct);
-    if (typeof showToast === 'function') showToast('Produk baru berhasil ditambahkan! 🎉', 'success');
+    if (typeof showToast === 'function') showToast('Produk baru berhasil ditambahkan.', 'success');
   }
 
   saveAdminProducts(products);
@@ -707,7 +728,7 @@ function changeOrderStatus(orderId, newStatus) {
 
   const st = normalizeOrderStatus(newStatus);
   if (typeof showToast === 'function') {
-    showToast(`Status pesanan ${formatDisplayOrderId(orderId, order.date)} diubah: "${st.label}" ✅`, 'success');
+    showToast(`Status pesanan ${formatDisplayOrderId(orderId, order.date)} diubah: "${st.label}".`, 'success');
   }
 
   renderAdminOrdersTable();
@@ -759,7 +780,7 @@ function approveProofFromModal() {
   if (!selectedProofOrderId) return;
   changeOrderStatus(selectedProofOrderId, 'diproses');
   closeProofModal();
-  if (typeof showToast === 'function') showToast('Bukti pembayaran disetujui! Pesanan sedang diproses. ✅', 'success');
+  if (typeof showToast === 'function') showToast('Bukti pembayaran disetujui, pesanan sedang diproses.', 'success');
 }
 
 function getAdminUsers() {
@@ -883,67 +904,130 @@ function toggleUserStatus(index) {
   renderAdminUsersTable();
 }
 
+let currentReportPeriod = 'weekly';
+
+function getProductCogs(product) {
+  if (!product) return 0;
+  if (typeof product.cost === 'number' && product.cost > 0) return product.cost;
+  const price = Number(product.price) || 0;
+  return Math.round(price * 0.60);
+}
+
+function filterOrdersByPeriod(orders, period) {
+  const now = new Date();
+  return orders.filter(o => {
+    if (!o.date) return false;
+    const oDate = new Date(o.date);
+    if (isNaN(oDate.getTime())) return false;
+
+    if (period === 'daily') {
+      return oDate.getFullYear() === now.getFullYear() &&
+             oDate.getMonth() === now.getMonth() &&
+             oDate.getDate() === now.getDate();
+    } else if (period === 'weekly') {
+      const pastWeek = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 6, 0, 0, 0, 0);
+      return oDate >= pastWeek && oDate <= now;
+    } else if (period === 'monthly') {
+      return oDate.getFullYear() === now.getFullYear() &&
+             oDate.getMonth() === now.getMonth();
+    } else {
+      return true;
+    }
+  });
+}
+
+function setReportPeriod(period, btnEl) {
+  currentReportPeriod = period;
+  document.querySelectorAll('.report-filter-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.period === period);
+  });
+  renderReportsSection();
+}
+
 function renderReportsSection() {
-  const orders = getAdminOrders();
+  const allOrders = getAdminOrders();
   const products = getAdminProducts();
 
-  const validOrders = orders.filter(o => o.status !== 'cancelled' && o.status !== 'dibatalkan');
-  const completedOrders = orders.filter(o => {
-    const s = (o.status || '').toLowerCase();
-    return s === 'selesai' || s === 'done' || s === 'diproses' || s === 'processing' || s === 'ready' || s === 'dikirim' || s === 'shipped';
-  });
+  const validAllOrders = allOrders.filter(o => o.status !== 'cancelled' && o.status !== 'dibatalkan');
+  const periodOrders = filterOrdersByPeriod(validAllOrders, currentReportPeriod);
 
-  const totalRevenue = validOrders.reduce((sum, o) => sum + (Number(o.total || o.totalPrice) || 0), 0);
-  const doneOrdersCount = completedOrders.length;
+  let totalRevenue = 0;
+  let totalCogs = 0;
 
-  document.getElementById('rep-total-revenue').textContent = formatRp(totalRevenue);
-  document.getElementById('rep-done-orders').textContent = `${doneOrdersCount} Transaksi`;
+  periodOrders.forEach(o => {
+    const orderTotal = Number(o.total || o.totalPrice) || 0;
+    totalRevenue += orderTotal;
 
-  const prodQuantities = {};
-  validOrders.forEach(o => {
     if (Array.isArray(o.items)) {
       o.items.forEach(it => {
         const prodId = it.id || it.productId;
         const p = products.find(prod => prod.id === prodId);
-        const name = p ? p.name : (it.productName || it.name || 'Produk');
         const qty = Number(it.qty || it.quantity) || 1;
-        prodQuantities[name] = (prodQuantities[name] || 0) + qty;
+        const cogs = getProductCogs(p);
+        totalCogs += cogs * qty;
       });
     }
   });
 
-  let topProdName = '-';
-  let maxQty = 0;
-  Object.keys(prodQuantities).forEach(name => {
-    if (prodQuantities[name] > maxQty) {
-      maxQty = prodQuantities[name];
-      topProdName = name;
-    }
-  });
+  const totalProfit = totalRevenue - totalCogs;
+  const marginPercent = totalRevenue > 0 ? ((totalProfit / totalRevenue) * 100).toFixed(1) : '0';
 
-  const repTopProdEl = document.getElementById('rep-top-product');
-  const repTopProdSubEl = document.getElementById('rep-top-product-sub');
-  if (repTopProdEl) repTopProdEl.textContent = topProdName !== '-' ? topProdName : 'Belum ada data';
-  if (repTopProdSubEl) repTopProdSubEl.textContent = maxQty > 0 ? `${maxQty} porsi terjual` : 'Belum ada transaksi';
+  const revEl = document.getElementById('rep-total-revenue');
+  const cogsEl = document.getElementById('rep-total-cogs');
+  const profitEl = document.getElementById('rep-total-profit');
+  const marginEl = document.getElementById('rep-margin-percent');
+  const doneOrdersEl = document.getElementById('rep-done-orders');
+  const badgeEl = document.getElementById('rep-period-badge');
+  const subtitleEl = document.getElementById('rep-chart-subtitle');
 
-  renderWeeklySalesChart(validOrders);
+  if (revEl) revEl.textContent = formatRp(totalRevenue);
+  if (cogsEl) cogsEl.textContent = formatRp(totalCogs);
+  if (profitEl) profitEl.textContent = formatRp(totalProfit);
+  if (marginEl) marginEl.textContent = `Margin Keuntungan: ${marginPercent}%`;
+  if (doneOrdersEl) doneOrdersEl.textContent = `${periodOrders.length} Transaksi`;
+
+  const periodLabels = {
+    daily: 'Harian (Hari Ini)',
+    weekly: 'Mingguan (7 Hari Terakhir)',
+    monthly: 'Bulanan (Bulan Ini)',
+    all: 'Semua Periode'
+  };
+
+  if (badgeEl) badgeEl.textContent = periodLabels[currentReportPeriod] || 'Statistik Realtime';
+  if (subtitleEl) subtitleEl.textContent = `Tren pendapatan dan laba bersih periode ${periodLabels[currentReportPeriod] || ''}`;
+
+  renderFinancialChart(periodOrders, currentReportPeriod);
 
   const repTbody = document.getElementById('rep-products-tbody');
+  const repTfoot = document.getElementById('rep-products-tfoot');
+
+  let grandQty = 0;
+  let grandOmset = 0;
+  let grandCogs = 0;
+  let grandProfit = 0;
+
   if (repTbody) {
     repTbody.innerHTML = products.map(p => {
-      let totalQty = 0;
-      validOrders.forEach(o => {
+      let soldQty = 0;
+      periodOrders.forEach(o => {
         if (Array.isArray(o.items)) {
           o.items.forEach(it => {
             if ((it.id || it.productId) === p.id) {
-              totalQty += Number(it.qty || it.quantity) || 1;
+              soldQty += Number(it.qty || it.quantity) || 1;
             }
           });
         }
       });
 
-      const displaySold = totalQty;
-      const subtotal = displaySold * p.price;
+      const cogs = getProductCogs(p);
+      const subtotalOmset = soldQty * p.price;
+      const subtotalCogs = soldQty * cogs;
+      const subtotalProfit = subtotalOmset - subtotalCogs;
+
+      grandQty += soldQty;
+      grandOmset += subtotalOmset;
+      grandCogs += subtotalCogs;
+      grandProfit += subtotalProfit;
 
       return `
         <tr>
@@ -955,49 +1039,137 @@ function renderReportsSection() {
           </td>
           <td><span class="badge-status badge-processing">${p.categoryLabel || p.category}</span></td>
           <td>${formatRp(p.price)}</td>
-          <td><strong>${displaySold}</strong> porsi</td>
-          <td><strong>${formatRp(subtotal)}</strong></td>
+          <td><span style="color:#64748b;">${formatRp(cogs)}</span></td>
+          <td><strong>${soldQty}</strong> porsi</td>
+          <td><strong>${formatRp(subtotalOmset)}</strong></td>
+          <td><span style="color:#64748b;">${formatRp(subtotalCogs)}</span></td>
+          <td><strong style="color:#15803d;">${formatRp(subtotalProfit)}</strong></td>
         </tr>
       `;
     }).join('');
   }
+
+  if (repTfoot) {
+    repTfoot.innerHTML = `
+      <tr>
+        <td colspan="4" style="text-align:right;padding:12px;font-weight:700;">TOTAL KESELURUHAN:</td>
+        <td style="padding:12px;font-weight:800;">${grandQty} porsi</td>
+        <td style="padding:12px;font-weight:800;color:#1e293b;">${formatRp(grandOmset)}</td>
+        <td style="padding:12px;font-weight:700;color:#64748b;">${formatRp(grandCogs)}</td>
+        <td style="padding:12px;font-weight:800;color:#15803d;font-size:1.02rem;">${formatRp(grandProfit)}</td>
+      </tr>
+    `;
+  }
 }
 
-function renderWeeklySalesChart(validOrders) {
+function renderFinancialChart(periodOrders, period) {
   const chartWrapper = document.getElementById('sales-chart-wrapper');
   if (!chartWrapper) return;
 
   const now = new Date();
-  const daysData = [];
-  const daysLabels = [];
+  const dataPoints = [];
 
-  for (let i = 6; i >= 0; i--) {
-    const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i);
-    const dayStart = d.getTime();
-    const dayEnd = dayStart + 86400000;
+  if (period === 'daily') {
+    const hours = ['06:00', '09:00', '12:00', '15:00', '18:00', '21:00', '23:59'];
+    for (let i = 0; i < hours.length; i++) {
+      const hStr = hours[i];
+      const hVal = parseInt(hStr.split(':')[0], 10);
+      const mVal = parseInt(hStr.split(':')[1], 10);
+      const prevH = i === 0 ? 0 : parseInt(hours[i - 1].split(':')[0], 10);
 
-    const daySum = validOrders.reduce((sum, o) => {
-      const oTime = new Date(o.date).getTime();
-      if (oTime >= dayStart && oTime < dayEnd) {
-        return sum + (Number(o.total || o.totalPrice) || 0);
-      }
-      return sum;
-    }, 0);
+      const segmentRev = periodOrders.reduce((sum, o) => {
+        const oDate = new Date(o.date);
+        const oH = oDate.getHours();
+        if (oH >= prevH && oH <= hVal) {
+          return sum + (Number(o.total || o.totalPrice) || 0);
+        }
+        return sum;
+      }, 0);
 
-    const label = d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
-    daysData.push(daySum);
-    daysLabels.push(label);
+      dataPoints.push({
+        label: hStr,
+        rev: segmentRev,
+        profit: Math.round(segmentRev * 0.4)
+      });
+    }
+  } else if (period === 'monthly') {
+    const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+    const intervals = [
+      { label: 'Tgl 1-7', start: 1, end: 7 },
+      { label: 'Tgl 8-14', start: 8, end: 14 },
+      { label: 'Tgl 15-21', start: 15, end: 21 },
+      { label: 'Tgl 22-28', start: 22, end: 28 },
+      { label: `Tgl 29-${daysInMonth}`, start: 29, end: daysInMonth }
+    ];
+
+    intervals.forEach(intv => {
+      const sumRev = periodOrders.reduce((sum, o) => {
+        const oDate = new Date(o.date);
+        const day = oDate.getDate();
+        if (day >= intv.start && day <= intv.end) {
+          return sum + (Number(o.total || o.totalPrice) || 0);
+        }
+        return sum;
+      }, 0);
+
+      dataPoints.push({
+        label: intv.label,
+        rev: sumRev,
+        profit: Math.round(sumRev * 0.4)
+      });
+    });
+  } else if (period === 'all') {
+    for (let i = 5; i >= 0; i--) {
+      const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      const mIdx = d.getMonth();
+      const yIdx = d.getFullYear();
+
+      const sumRev = periodOrders.reduce((sum, o) => {
+        const oDate = new Date(o.date);
+        if (oDate.getMonth() === mIdx && oDate.getFullYear() === yIdx) {
+          return sum + (Number(o.total || o.totalPrice) || 0);
+        }
+        return sum;
+      }, 0);
+
+      const label = d.toLocaleDateString('id-ID', { month: 'short' });
+      dataPoints.push({
+        label: label,
+        rev: sumRev,
+        profit: Math.round(sumRev * 0.4)
+      });
+    }
+  } else {
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i);
+      const dayStart = new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+      const dayEnd = dayStart + 86400000;
+
+      const sumRev = periodOrders.reduce((sum, o) => {
+        const oTime = new Date(o.date).getTime();
+        if (oTime >= dayStart && oTime < dayEnd) {
+          return sum + (Number(o.total || o.totalPrice) || 0);
+        }
+        return sum;
+      }, 0);
+
+      const label = d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
+      dataPoints.push({
+        label: label,
+        rev: sumRev,
+        profit: Math.round(sumRev * 0.4)
+      });
+    }
   }
 
-  const chartValues = daysData;
-
-  const maxVal = Math.max(...chartValues, 50000);
+  const revValues = dataPoints.map(p => p.rev);
+  const maxVal = Math.max(...revValues, 50000);
   const minVal = 0;
   const range = maxVal - minVal || 1;
 
   const svgWidth = 800;
   const svgHeight = 220;
-  const paddingLeft = 40;
+  const paddingLeft = 50;
   const paddingRight = 40;
   const paddingTop = 35;
   const paddingBottom = 40;
@@ -1005,21 +1177,30 @@ function renderWeeklySalesChart(validOrders) {
   const plotWidth = svgWidth - paddingLeft - paddingRight;
   const plotHeight = svgHeight - paddingTop - paddingBottom;
 
-  const points = chartValues.map((val, idx) => {
-    const x = paddingLeft + (idx / (chartValues.length - 1)) * plotWidth;
-    const y = paddingTop + plotHeight - ((val - minVal) / range) * plotHeight;
-    return { x, y, val, label: daysLabels[idx] };
+  const points = dataPoints.map((pt, idx) => {
+    const x = paddingLeft + (idx / (dataPoints.length - 1 || 1)) * plotWidth;
+    const y = paddingTop + plotHeight - ((pt.rev - minVal) / range) * plotHeight;
+    const yProfit = paddingTop + plotHeight - ((pt.profit - minVal) / range) * plotHeight;
+    return { x, y, yProfit, rev: pt.rev, profit: pt.profit, label: pt.label };
   });
 
-  let pathD = `M ${points[0].x} ${points[0].y}`;
+  let pathRev = `M ${points[0].x} ${points[0].y}`;
   for (let i = 0; i < points.length - 1; i++) {
     const p0 = points[i];
     const p1 = points[i + 1];
     const cx = (p0.x + p1.x) / 2;
-    pathD += ` C ${cx} ${p0.y}, ${cx} ${p1.y}, ${p1.x} ${p1.y}`;
+    pathRev += ` C ${cx} ${p0.y}, ${cx} ${p1.y}, ${p1.x} ${p1.y}`;
   }
 
-  const areaD = `${pathD} L ${points[points.length - 1].x} ${paddingTop + plotHeight} L ${points[0].x} ${paddingTop + plotHeight} Z`;
+  const areaD = `${pathRev} L ${points[points.length - 1].x} ${paddingTop + plotHeight} L ${points[0].x} ${paddingTop + plotHeight} Z`;
+
+  let pathProfit = `M ${points[0].x} ${points[0].yProfit}`;
+  for (let i = 0; i < points.length - 1; i++) {
+    const p0 = points[i];
+    const p1 = points[i + 1];
+    const cx = (p0.x + p1.x) / 2;
+    pathProfit += ` C ${cx} ${p0.yProfit}, ${cx} ${p1.yProfit}, ${p1.x} ${p1.yProfit}`;
+  }
 
   const gridLines = [0, 0.5, 1].map(pct => {
     const y = paddingTop + plotHeight * (1 - pct);
@@ -1031,62 +1212,285 @@ function renderWeeklySalesChart(validOrders) {
   }).join('');
 
   const dotsAndLabels = points.map(pt => `
-    <circle cx="${pt.x}" cy="${pt.y}" r="5" fill="#2d5a27" stroke="#ffffff" stroke-width="2.5" class="chart-point" />
-    <text x="${pt.x}" y="${pt.y - 10}" fill="#2d5a27" font-size="11" font-weight="700" text-anchor="middle">${formatRp(pt.val)}</text>
+    <circle cx="${pt.x}" cy="${pt.y}" r="5" fill="#2d5a27" stroke="#ffffff" stroke-width="2.5" />
+    <text x="${pt.x}" y="${pt.y - 10}" fill="#2d5a27" font-size="11" font-weight="700" text-anchor="middle">${formatRp(pt.rev)}</text>
+    <circle cx="${pt.x}" cy="${pt.yProfit}" r="4" fill="#16a34a" stroke="#ffffff" stroke-width="2" />
     <text x="${pt.x}" y="${svgHeight - 12}" fill="#6b7280" font-size="11" font-weight="600" text-anchor="middle">${pt.label}</text>
   `).join('');
 
   chartWrapper.innerHTML = `
     <svg viewBox="0 0 ${svgWidth} ${svgHeight}" preserveAspectRatio="xMidYMid meet">
       <defs>
-        <linearGradient id="salesGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stop-color="#2d5a27" stop-opacity="0.32"/>
+        <linearGradient id="financialSalesGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#2d5a27" stop-opacity="0.25"/>
           <stop offset="100%" stop-color="#2d5a27" stop-opacity="0.0"/>
         </linearGradient>
       </defs>
 
       ${gridLines}
-      <path d="${areaD}" fill="url(#salesGrad)" />
-      <path d="${pathD}" fill="none" stroke="#2d5a27" stroke-width="3.5" stroke-linecap="round" />
+      <path d="${areaD}" fill="url(#financialSalesGrad)" />
+      <path d="${pathProfit}" fill="none" stroke="#16a34a" stroke-width="2.5" stroke-dasharray="5 4" stroke-linecap="round" />
+      <path d="${pathRev}" fill="none" stroke="#2d5a27" stroke-width="3.5" stroke-linecap="round" />
       ${dotsAndLabels}
     </svg>
+    <div style="display:flex;justify-content:center;gap:20px;margin-top:8px;font-size:0.8rem;color:#4b5563;">
+      <span style="display:inline-flex;align-items:center;gap:6px;"><span style="display:inline-block;width:12px;height:4px;background:#2d5a27;border-radius:2px;"></span> Pendapatan (Omset)</span>
+      <span style="display:inline-flex;align-items:center;gap:6px;"><span style="display:inline-block;width:12px;height:2px;border-top:2px dashed #16a34a;"></span> Estimasi Laba Bersih</span>
+    </div>
   `;
 }
 
-function exportAdminSalesReport() {
-  const orders = getAdminOrders();
-  const rows = [
-    ['ID Order', 'Tanggal', 'Nama Penerima', 'Total Harga', 'Status', 'Metode Pembayaran', 'Alamat']
-  ];
+function exportAdminFinancialExcel() {
+  const allOrders = getAdminOrders();
+  const products = getAdminProducts();
+  const validOrders = allOrders.filter(o => o.status !== 'cancelled' && o.status !== 'dibatalkan');
+  const periodOrders = filterOrdersByPeriod(validOrders, currentReportPeriod);
 
-  orders.forEach(o => {
+  let totalRevenue = 0;
+  let totalCogs = 0;
+
+  periodOrders.forEach(o => {
+    totalRevenue += Number(o.total || o.totalPrice) || 0;
+    if (Array.isArray(o.items)) {
+      o.items.forEach(it => {
+        const prodId = it.id || it.productId;
+        const p = products.find(prod => prod.id === prodId);
+        const qty = Number(it.qty || it.quantity) || 1;
+        totalCogs += getProductCogs(p) * qty;
+      });
+    }
+  });
+
+  const totalProfit = totalRevenue - totalCogs;
+  const marginPercent = totalRevenue > 0 ? ((totalProfit / totalRevenue) * 100).toFixed(1) : '0';
+
+  const periodLabels = {
+    daily: 'Harian (Hari Ini)',
+    weekly: 'Mingguan (7 Hari Terakhir)',
+    monthly: 'Bulanan (Bulan Ini)',
+    all: 'Semua Periode'
+  };
+
+  const periodName = periodLabels[currentReportPeriod] || currentReportPeriod;
+  const printDate = new Date().toLocaleString('id-ID');
+
+  let productRows = '';
+  let grandQty = 0;
+  let grandOmset = 0;
+  let grandCost = 0;
+  let grandProf = 0;
+
+  products.forEach(p => {
+    let soldQty = 0;
+    periodOrders.forEach(o => {
+      if (Array.isArray(o.items)) {
+        o.items.forEach(it => {
+          if ((it.id || it.productId) === p.id) {
+            soldQty += Number(it.qty || it.quantity) || 1;
+          }
+        });
+      }
+    });
+
+    const cogs = getProductCogs(p);
+    const subOmset = soldQty * p.price;
+    const subCost = soldQty * cogs;
+    const subProf = subOmset - subCost;
+
+    grandQty += soldQty;
+    grandOmset += subOmset;
+    grandCost += subCost;
+    grandProf += subProf;
+
+    productRows += `
+      <tr>
+        <td style="border:1px solid #d1d5db;padding:8px;">${p.name}</td>
+        <td style="border:1px solid #d1d5db;padding:8px;">${p.categoryLabel || p.category}</td>
+        <td style="border:1px solid #d1d5db;padding:8px;text-align:right;">${p.price}</td>
+        <td style="border:1px solid #d1d5db;padding:8px;text-align:right;">${cogs}</td>
+        <td style="border:1px solid #d1d5db;padding:8px;text-align:center;">${soldQty}</td>
+        <td style="border:1px solid #d1d5db;padding:8px;text-align:right;">${subOmset}</td>
+        <td style="border:1px solid #d1d5db;padding:8px;text-align:right;">${subCost}</td>
+        <td style="border:1px solid #d1d5db;padding:8px;text-align:right;font-weight:bold;color:#16a34a;">${subProf}</td>
+      </tr>
+    `;
+  });
+
+  let orderRows = '';
+  periodOrders.forEach(o => {
     const rawId = formatDisplayOrderId(o.id, o.date);
     const dateStr = formatOrderDate(o.date);
     const recipient = (o.address?.recipient || o.recipientName || o.userId || '-').replace(/,/g, ' ').trim();
-    const total = o.total || o.totalPrice || 0;
+    const total = Number(o.total || o.totalPrice) || 0;
     const statusLabel = normalizeOrderStatus(o.status).label;
     const payment = (o.paymentMethod === 'transfer' ? 'Transfer Bank' : (o.paymentMethod === 'cod' ? 'COD' : 'E-Wallet'));
-    const address = (o.deliveryMethod === 'pickup' ? 'Pick Up di Tempat' : (o.address?.detail || o.address?.city || '-')).replace(/,/g, ' ').trim();
+    const delivery = (o.deliveryMethod === 'pickup' ? 'Pick Up' : 'Pengiriman');
 
-    rows.push([rawId, dateStr, recipient, total, statusLabel, payment, address]);
+    let orderCost = 0;
+    if (Array.isArray(o.items)) {
+      o.items.forEach(it => {
+        const prod = products.find(p => p.id === (it.id || it.productId));
+        const q = Number(it.qty || it.quantity) || 1;
+        orderCost += getProductCogs(prod) * q;
+      });
+    }
+    const orderProf = total - orderCost;
+
+    orderRows += `
+      <tr>
+        <td style="border:1px solid #d1d5db;padding:8px;">${rawId}</td>
+        <td style="border:1px solid #d1d5db;padding:8px;">${dateStr}</td>
+        <td style="border:1px solid #d1d5db;padding:8px;">${recipient}</td>
+        <td style="border:1px solid #d1d5db;padding:8px;text-align:center;">${statusLabel}</td>
+        <td style="border:1px solid #d1d5db;padding:8px;">${payment} (${delivery})</td>
+        <td style="border:1px solid #d1d5db;padding:8px;text-align:right;">${total}</td>
+        <td style="border:1px solid #d1d5db;padding:8px;text-align:right;">${orderCost}</td>
+        <td style="border:1px solid #d1d5db;padding:8px;text-align:right;font-weight:bold;color:#16a34a;">${orderProf}</td>
+      </tr>
+    `;
   });
 
-  const csvContent = 'data:text/csv;charset=utf-8,\uFEFF' + rows.map(e => e.map(item => `"${item}"`).join(',')).join('\n');
-  const encodedUri = encodeURI(csvContent);
-  const link = document.createElement('a');
-  link.setAttribute('href', encodedUri);
-  link.setAttribute('download', `laporan_penjualan_elok_mekar_sari_${new Date().toISOString().slice(0, 10)}.csv`);
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
+  const excelTemplate = `
+    <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
+    <head>
+      <meta charset="utf-8">
+      <title>Laporan Keuangan Elok Mekar Sari</title>
+      <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 11pt; }
+        .title { font-size: 16pt; font-weight: bold; color: #1e3a1e; }
+        .meta { font-size: 10pt; color: #4b5563; }
+        .table-header { background-color: #2d5a27; color: #ffffff; font-weight: bold; text-align: center; }
+        .subtotal-header { background-color: #f1f5f9; font-weight: bold; }
+      </style>
+    </head>
+    <body>
+      <div class="title">LAPORAN KEUANGAN & LABA BERSIH UMKM ELOK MEKAR SARI</div>
+      <div class="meta">Periode Laporan: <strong>${periodName}</strong> | Dicetak pada: ${printDate}</div>
+      <br>
+
+      <table border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse;border:1px solid #d1d5db;">
+        <tr style="background-color:#e2e8f0;font-weight:bold;">
+          <th colspan="2" style="text-align:left;padding:8px;">RINGKASAN KEUANGAN</th>
+        </tr>
+        <tr>
+          <td style="width:250px;padding:6px;">Total Omset (Pendapatan)</td>
+          <td style="font-weight:bold;text-align:right;padding:6px;">Rp ${totalRevenue.toLocaleString('id-ID')}</td>
+        </tr>
+        <tr>
+          <td style="padding:6px;">Total Modal (HPP / Biaya Bahan)</td>
+          <td style="font-weight:bold;text-align:right;padding:6px;">Rp ${totalCogs.toLocaleString('id-ID')}</td>
+        </tr>
+        <tr>
+          <td style="padding:6px;background-color:#dcfce7;color:#166534;font-weight:bold;">Total Laba Bersih (Profit)</td>
+          <td style="background-color:#dcfce7;color:#166534;font-weight:bold;text-align:right;padding:6px;">Rp ${totalProfit.toLocaleString('id-ID')}</td>
+        </tr>
+        <tr>
+          <td style="padding:6px;">Persentase Margin Keuntungan</td>
+          <td style="font-weight:bold;text-align:right;padding:6px;">${marginPercent}%</td>
+        </tr>
+        <tr>
+          <td style="padding:6px;">Jumlah Transaksi Selesai</td>
+          <td style="font-weight:bold;text-align:right;padding:6px;">${periodOrders.length} Pesanan</td>
+        </tr>
+      </table>
+      <br><br>
+
+      <div style="font-size:13pt;font-weight:bold;color:#1e3a1e;margin-bottom:6px;">RINCIAN KEUANGAN TIAP PRODUK</div>
+      <table border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse;border:1px solid #d1d5db;">
+        <tr class="table-header">
+          <th style="padding:8px;">Nama Produk</th>
+          <th style="padding:8px;">Kategori</th>
+          <th style="padding:8px;">Harga Jual (Rp)</th>
+          <th style="padding:8px;">Modal HPP (Rp)</th>
+          <th style="padding:8px;">Terjual</th>
+          <th style="padding:8px;">Total Omset (Rp)</th>
+          <th style="padding:8px;">Total Modal (Rp)</th>
+          <th style="padding:8px;">Laba Bersih (Rp)</th>
+        </tr>
+        ${productRows}
+        <tr class="subtotal-header">
+          <td colspan="4" style="text-align:right;font-weight:bold;padding:8px;">TOTAL PRODUK:</td>
+          <td style="text-align:center;font-weight:bold;padding:8px;">${grandQty}</td>
+          <td style="text-align:right;font-weight:bold;padding:8px;">${grandOmset}</td>
+          <td style="text-align:right;font-weight:bold;padding:8px;">${grandCost}</td>
+          <td style="text-align:right;font-weight:bold;color:#16a34a;padding:8px;">${grandProf}</td>
+        </tr>
+      </table>
+      <br><br>
+
+      <div style="font-size:13pt;font-weight:bold;color:#1e3a1e;margin-bottom:6px;">RIWAYAT TRANSAKSI PESANAN</div>
+      <table border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse;border:1px solid #d1d5db;">
+        <tr class="table-header">
+          <th style="padding:8px;">ID Pesanan</th>
+          <th style="padding:8px;">Tanggal</th>
+          <th style="padding:8px;">Nama Penerima</th>
+          <th style="padding:8px;">Status</th>
+          <th style="padding:8px;">Metode</th>
+          <th style="padding:8px;">Omset (Rp)</th>
+          <th style="padding:8px;">Modal (Rp)</th>
+          <th style="padding:8px;">Laba (Rp)</th>
+        </tr>
+        ${orderRows.length > 0 ? orderRows : '<tr><td colspan="8" style="text-align:center;padding:12px;">Tidak ada transaksi pada periode ini</td></tr>'}
+      </table>
+    </body>
+    </html>
+  `;
+
+  const blob = new Blob(['\uFEFF' + excelTemplate], { type: 'application/vnd.ms-excel;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const downloadLink = document.createElement('a');
+  const fileDate = new Date().toISOString().slice(0, 10);
+  downloadLink.href = url;
+  downloadLink.download = `Laporan_Keuangan_${currentReportPeriod}_${fileDate}.xls`;
+  document.body.appendChild(downloadLink);
+  downloadLink.click();
+  document.body.removeChild(downloadLink);
+  URL.revokeObjectURL(url);
 
   if (typeof showToast === 'function') {
-    showToast('Laporan penjualan (CSV) berhasil diunduh! 📥', 'success');
+    showToast('Laporan keuangan Excel berhasil diunduh.', 'success');
   }
 }
 
+function exportAdminSalesReport() {
+  exportAdminFinancialExcel();
+}
+
+let cachedOrdersJson = '';
+
+function refreshAllAdminData() {
+  renderDashboardOverview();
+  const ordersSec = document.getElementById('sec-orders');
+  if (ordersSec && !ordersSec.classList.contains('hidden')) {
+    renderAdminOrdersTable();
+  }
+  const reportsSec = document.getElementById('sec-reports');
+  if (reportsSec && !reportsSec.classList.contains('hidden')) {
+    renderReportsSection();
+  }
+}
+
+window.addEventListener('storage', (e) => {
+  if (e.key === 'ems_orders' || e.key === 'ems_products') {
+    refreshAllAdminData();
+  }
+});
+
+window.addEventListener('ems_orders_updated', () => {
+  refreshAllAdminData();
+});
+
+setInterval(() => {
+  const currentJson = localStorage.getItem('ems_orders') || '';
+  if (currentJson !== cachedOrdersJson) {
+    cachedOrdersJson = currentJson;
+    refreshAllAdminData();
+  }
+}, 1500);
+
 document.addEventListener('DOMContentLoaded', () => {
   if (checkAdminAccess()) {
+    cachedOrdersJson = localStorage.getItem('ems_orders') || '';
     renderDashboardOverview();
   }
 });

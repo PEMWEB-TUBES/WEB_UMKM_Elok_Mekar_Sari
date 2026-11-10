@@ -29,6 +29,13 @@ function initCheckout() {
     if (phoneInput && !phoneInput.value) phoneInput.value = user.phone || '';
   }
 
+  const addrInput = document.getElementById('address');
+  const cityInput = document.getElementById('city');
+  const zipInput = document.getElementById('zip');
+  if (addrInput) addrInput.value = '';
+  if (cityInput) cityInput.value = '';
+  if (zipInput) zipInput.value = '';
+
   const pickupDateInput = document.getElementById('pickup-date');
   if (pickupDateInput) {
     const today = new Date().toISOString().split('T')[0];

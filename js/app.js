@@ -264,56 +264,120 @@ function getOrders() {
     {
       id: 'EMS-001',
       userId: 'demo@user.com',
-      date: new Date(Date.now() - 3 * 24 * 3600000).toISOString(),
+      date: '2026-10-25T15:39:00.000Z',
       items: [
-        { id: 1, qty: 2 },
-        { id: 10, qty: 3 }
+        { id: 7, qty: 2 }
       ],
       deliveryMethod: 'delivery',
-      address: { recipient: 'Budi Santoso', phone: '081234567890', detail: 'Jl. Merdeka No. 5, Surabaya', city: 'Surabaya', zip: '60111' },
+      address: {
+        recipient: 'Budi Santoso',
+        phone: '081234567890',
+        detail: 'Jl. Merdeka No. 5, Surabaya',
+        city: 'Surabaya',
+        zip: '60111'
+      },
       paymentMethod: 'transfer',
       paymentDetail: 'BRI',
       status: 'processing',
-      proofUrl: null,
-      total: 2 * 15000 + 3 * 8000
+      proofUrl: 'images/bukti_transfer_bri.svg',
+      total: 54000
     },
     {
       id: 'EMS-002',
       userId: 'demo@user.com',
-      date: new Date(Date.now() - 10 * 24 * 3600000).toISOString(),
-      items: [{ id: 6, qty: 1 }],
+      date: '2026-10-18T15:39:00.000Z',
+      items: [
+        { id: 3, qty: 1 }
+      ],
       deliveryMethod: 'pickup',
-      pickupDate: '2024-01-20',
-      pickupTime: '10:00',
+      pickup: {
+        date: '2026-10-18',
+        time: '15:39'
+      },
+      address: {
+        recipient: 'Budi Santoso',
+        phone: '081234567890',
+        detail: 'Jl. Merdeka No. 5, Surabaya',
+        city: 'Surabaya',
+        zip: '60111'
+      },
       paymentMethod: 'ewallet',
       paymentDetail: 'GoPay',
       status: 'done',
-      proofUrl: null,
+      proofUrl: 'images/bukti_transfer_gopay.svg',
       total: 22000
+    },
+    {
+      id: 'EMS-003',
+      userId: 'demo@user.com',
+      date: '2026-10-10T09:15:00.000Z',
+      items: [
+        { id: 4, qty: 2 }
+      ],
+      deliveryMethod: 'delivery',
+      address: {
+        recipient: 'Budi Santoso',
+        phone: '081234567890',
+        detail: 'Jl. Merdeka No. 5, Surabaya',
+        city: 'Surabaya',
+        zip: '60111'
+      },
+      paymentMethod: 'transfer',
+      paymentDetail: 'BRI',
+      status: 'cancelled',
+      proofUrl: null,
+      total: 20000
     }
   ];
-  const stored = JSON.parse(localStorage.getItem('ems_orders') || 'null');
-  if (!stored) {
+  let stored = JSON.parse(localStorage.getItem('ems_orders') || 'null');
+  if (!stored || !Array.isArray(stored) || stored.length === 0) {
     localStorage.setItem('ems_orders', JSON.stringify(defaultOrders));
     return defaultOrders;
+  }
+  let needSave = false;
+  stored.forEach(o => {
+    if (o.id === 'EMS-001' && !o.proofUrl) {
+      o.proofUrl = 'images/bukti_transfer_bri.svg';
+      needSave = true;
+    }
+    if (o.id === 'EMS-002' && (!o.proofUrl || o.paymentMethod === 'ewallet' || o.paymentDetail === 'GoPay')) {
+      o.proofUrl = 'images/bukti_transfer_gopay.svg';
+      needSave = true;
+    }
+  });
+  const hasCancelled = stored.some(o => o.status === 'cancelled' || o.status === 'dibatalkan');
+  if (!hasCancelled) {
+    stored.push(defaultOrders[2]);
+    needSave = true;
+  }
+  if (needSave) {
+    localStorage.setItem('ems_orders', JSON.stringify(stored));
   }
   return stored;
 }
 
 function saveOrders(orders) {
   localStorage.setItem('ems_orders', JSON.stringify(orders));
+  try {
+    window.dispatchEvent(new CustomEvent('ems_orders_updated', { detail: orders }));
+  } catch (e) {}
 }
 
 function getStatusInfo(status) {
+  const s = (status || 'pending').toLowerCase();
   const map = {
     pending: { label: 'Menunggu Pembayaran', icon: '⏳', class: 'status-pending' },
     processing: { label: 'Sedang Diproses', icon: '⚙️', class: 'status-processing' },
+    diproses: { label: 'Sedang Diproses', icon: '⚙️', class: 'status-processing' },
     shipped: { label: 'Dikirim', icon: '🚚', class: 'status-shipped' },
+    dikirim: { label: 'Dikirim', icon: '🚚', class: 'status-shipped' },
     ready: { label: 'Siap Diambil', icon: '🏪', class: 'status-ready' },
     done: { label: 'Selesai', icon: '✅', class: 'status-done' },
-    cancelled: { label: 'Dibatalkan', icon: '❌', class: 'status-cancelled' }
+    selesai: { label: 'Selesai', icon: '✅', class: 'status-done' },
+    cancelled: { label: 'Dibatalkan', icon: '❌', class: 'status-cancelled' },
+    dibatalkan: { label: 'Dibatalkan', icon: '❌', class: 'status-cancelled' }
   };
-  return map[status] || { label: status, icon: '📦', class: 'status-pending' };
+  return map[s] || { label: status, icon: '📦', class: 'status-pending' };
 }
 
 document.addEventListener('DOMContentLoaded', () => {

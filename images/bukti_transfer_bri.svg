@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 600" width="100%" height="100%">
+  <defs>
+    <linearGradient id="briHeader" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00529C" />
+      <stop offset="100%" stop-color="#003366" />
+    </linearGradient>
+    <filter id="cardShadow" x="-10%" y="-5%" width="120%" height="115%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#000000" flood-opacity="0.12" />
+    </filter>
+  </defs>
+
+  <rect width="420" height="600" fill="#f1f5f9" />
+
+  <g filter="url(#cardShadow)">
+    <rect x="20" y="20" width="380" height="560" rx="16" fill="#ffffff" />
+  </g>
+
+  <path d="M 20 36 Q 20 20 36 20 L 384 20 Q 400 20 400 36 L 400 90 L 20 90 Z" fill="url(#briHeader)" />
+
+  <text x="40" y="58" font-family="'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="22" font-weight="900" fill="#ffffff" letter-spacing="1">BRI<tspan fill="#f59e0b">mo</tspan></text>
+  <text x="380" y="58" font-family="'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="600" fill="#ffffff" text-anchor="end" opacity="0.9">BUKTI TRANSAKSI</text>
+
+  <g transform="translate(210, 140)">
+    <circle cx="0" cy="0" r="32" fill="#dcfce7" />
+    <circle cx="0" cy="0" r="24" fill="#16a34a" />
+    <path d="M -8 0 L -2 6 L 9 -5" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />
+  </g>
+
+  <text x="210" y="196" font-family="'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="16" font-weight="800" fill="#0f172a" text-anchor="middle">Transfer Berhasil</text>
+  <text x="210" y="216" font-family="'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="500" fill="#64748b" text-anchor="middle">25 Okt 2026 • 15:40:12 WIB</text>
+
+  <text x="210" y="254" font-family="'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="600" fill="#64748b" text-anchor="middle">Total Transaksi</text>
+  <text x="210" y="284" font-family="'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="26" font-weight="900" fill="#00529C" text-anchor="middle">Rp 54.000</text>
+
+  <line x1="45" y1="305" x2="375" y2="305" stroke="#e2e8f0" stroke-width="1.5" stroke-dasharray="6 4" />
+
+  <g transform="translate(45, 330)">
+    <text x="0" y="0" font-family="'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="500" fill="#64748b">No. Referensi</text>
+    <text x="330" y="0" font-family="'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="700" fill="#1e293b" text-anchor="end">20261025154098231</text>
+
+    <text x="0" y="28" font-family="'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="500" fill="#64748b">Sumber Dana</text>
+    <text x="330" y="28" font-family="'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="700" fill="#1e293b" text-anchor="end">BRI •••• 502 (Budi Santoso)</text>
+
+    <text x="0" y="56" font-family="'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="500" fill="#64748b">Bank Tujuan</text>
+    <text x="330" y="56" font-family="'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="700" fill="#1e293b" text-anchor="end">Bank BRI</text>
+
+    <text x="0" y="84" font-family="'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="500" fill="#64748b">Nomor Rekening</text>
+    <text x="330" y="84" font-family="'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="700" fill="#1e293b" text-anchor="end">0987-6543-21</text>
+
+    <text x="0" y="112" font-family="'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="500" fill="#64748b">Nama Penerima</text>
+    <text x="330" y="112" font-family="'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="700" fill="#00529C" text-anchor="end">Elok Mekar Sari</text>
+
+    <text x="0" y="140" font-family="'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="500" fill="#64748b">Catatan Pesanan</text>
+    <text x="330" y="140" font-family="'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="700" fill="#1e293b" text-anchor="end">Pesanan #EMS-001</text>
+
+    <text x="0" y="168" font-family="'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="500" fill="#64748b">Biaya Transaksi</text>
+    <text x="330" y="168" font-family="'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="700" fill="#16a34a" text-anchor="end">Rp 0 (Gratis)</text>
+  </g>
+
+  <rect x="45" y="525" width="330" height="34" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1" />
+  <text x="210" y="546" font-family="'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="10" font-weight="500" fill="#94a3b8" text-anchor="middle">Resi ini merupakan bukti pembayaran elektronik yang sah</text>
+</svg>

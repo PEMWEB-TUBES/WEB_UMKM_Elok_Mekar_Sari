@@ -47,15 +47,41 @@ function initHero() {
 }
 
 function initStats() {
-  const stats = [
-    { selector: '#stat-products', value: PRODUCTS.length },
-    { selector: '#stat-users', value: 48 },
-    { selector: '#stat-orders', value: 124 },
-    { selector: '#stat-revenue', value: 1250000 }
+  const statsConfig = [
+    { id: 'stat-0', target: 2500, suffix: '+' },
+    { id: 'stat-1', target: 1200, suffix: '+' },
+    { id: 'stat-2', target: 15, suffix: '+' },
+    { id: 'stat-3', target: 2011, suffix: '', isYear: true }
   ];
-  stats.forEach(s => {
-    const el = document.querySelector(s.selector);
-    if (el) el.textContent = typeof s.value === 'number' ? formatRupiah(s.value) : s.value;
+
+  statsConfig.forEach(item => {
+    const el = document.getElementById(item.id);
+    if (!el) return;
+
+    if (item.isYear) {
+      el.textContent = '2011';
+      return;
+    }
+
+    const duration = 1200;
+    const startVal = 0;
+    const endVal = item.target;
+    const startTime = performance.now();
+
+    function update(currentTime) {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const easeProgress = 1 - Math.pow(1 - progress, 3);
+      const currentVal = Math.floor(startVal + (endVal - startVal) * easeProgress);
+
+      el.textContent = currentVal.toLocaleString('id-ID') + (progress >= 1 ? item.suffix : '');
+
+      if (progress < 1) {
+        requestAnimationFrame(update);
+      }
+    }
+
+    requestAnimationFrame(update);
   });
 }
 
